@@ -32,7 +32,7 @@ Net.line()
 ### All tracking types
 All tracking types are listed below. The tracking types can be used on the server, node, and client side.
 
-| Tracking Type        | Components           | Description                         |
-|----------------------|----------------------|-------------------------------------|
-| ShutdownTracking     | Server, Node, Client | Tracks the component shutdown event |
-| SuccessStartTracking | Server, Node, Client | Tracks the component start event    |
+| Tracking Type        | Components           | Description                                                                                           |
+|----------------------|----------------------|-------------------------------------------------------------------------------------------------------|
+| ShutdownTracking     | Server, Node, Client | Tracks the component shutdown event                                                                   |
+| SuccessStartTracking | Server, Node, Client | Tracks the component start event. On Client: Only call if the connection is successfully established. |

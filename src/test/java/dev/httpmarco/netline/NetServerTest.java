@@ -58,7 +58,7 @@ public class NetServerTest {
 
         assert client.state() == NetworkComponentState.CONNECTION_CLOSED;
         assert client.bossGroup().isShutdown();
-        //todo assert server client == 0
+        assert server.clients().isEmpty();
     }
 
     @Test

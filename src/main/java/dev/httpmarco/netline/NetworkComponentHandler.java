@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public abstract class NetworkComponentHandler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
-    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Packet packet) throws Exception {
-
+    protected void messageReceived(ChannelHandlerContext channelHandlerContext, Packet packet) {
+        System.err.println("Received packet: " + packet);
     }
 
     @Override
@@ -20,7 +20,7 @@ public abstract class NetworkComponentHandler extends SimpleChannelInboundHandle
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
         closeChannel(findChannel(ctx.channel()));
     }
 

@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.channel;
 
+import dev.httpmarco.netline.packet.Packet;
 import io.netty5.channel.Channel;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,9 @@ public final class NetChannel {
 
     public NetChannel(Channel channel) {
         this.channel = channel;
+    }
+
+    public void send(Packet packet) {
+        channel.writeAndFlush(packet);
     }
 }

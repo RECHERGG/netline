@@ -43,7 +43,10 @@ public class NetlineTest {
     @Test
     @Order(90)
     @DisplayName("Client state check")
-    public void testClientState() {
+    public void testClientState() throws InterruptedException {
+
+        Thread.sleep(1000);
+
         assert client.state() == NetworkComponentState.CONNECTION_ESTABLISHED;
         assert server.channels().size() == 1;
     }

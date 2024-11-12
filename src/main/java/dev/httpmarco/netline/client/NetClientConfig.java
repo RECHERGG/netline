@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 public final class NetClientConfig extends NetworkConfig {
 
+    private String id = UUID.randomUUID().toString();
     private boolean disableTcpFastOpen = false;
 
     public NetClientConfig() {

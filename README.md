@@ -36,6 +36,13 @@ All tracking types are listed below. The tracking types can be used on the serve
 | ShutdownTracking     | Server, Node, Client | Tracks the component shutdown event                                                                   |
 | SuccessStartTracking | Server, Node, Client | Tracks the component start event. On Client: Only call if the connection is successfully established. |
 
+### Base default packets
+
+| Packet name      | description                         | Declaration type |
+|------------------|-------------------------------------|------------------|
+| StringBasePacket | A simple packet that sends a string | `String.class`   |
+
+
 ### Coming features
 
 - Hostname and port whitelist 

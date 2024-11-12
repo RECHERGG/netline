@@ -20,7 +20,9 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
         this.bootstrap = new Bootstrap()
                 .group(bossGroup())
                 .channelFactory(NetworkUtils::createChannelFactory)
-                .handler(new NetChannelInitializer(new NetClientHandler()));
+                .handler(new NetChannelInitializer(new NetClientHandler(this)))
+                .option(ChannelOption.AUTO_READ, true);
+
 
         if(!config().disableTcpFastOpen() && Epoll.isTcpFastOpenClientSideAvailable()) {
             bootstrap.option(ChannelOption.TCP_FASTOPEN_CONNECT, true);

@@ -8,10 +8,17 @@ import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.Bootstrap;
 import io.netty5.channel.ChannelOption;
 import io.netty5.channel.epoll.Epoll;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
 public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
 
     private final Bootstrap bootstrap;
+
+    @Getter
+    @Setter
     private NetChannel channel;
 
     public NetClient() {
@@ -21,7 +28,10 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
                 .group(bossGroup())
                 .channelFactory(NetworkUtils::createChannelFactory)
                 .handler(new NetChannelInitializer(new NetClientHandler(this)))
-                .option(ChannelOption.AUTO_READ, true);
+                .option(ChannelOption.AUTO_READ, true)
+                .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.IP_TOS, 24)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
 
 
         if(!config().disableTcpFastOpen() && Epoll.isTcpFastOpenClientSideAvailable()) {

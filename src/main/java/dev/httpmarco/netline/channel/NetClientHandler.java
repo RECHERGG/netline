@@ -17,8 +17,7 @@ public class NetClientHandler extends NetworkComponentHandler {
 
     @Override
     public NetChannel findChannel(Channel channel) {
-        // todo
-        return null;
+        return client.channel();
     }
 
     @Override
@@ -28,6 +27,6 @@ public class NetClientHandler extends NetworkComponentHandler {
 
     @Override
     public void closeChannel(NetChannel netChannel) {
-        // todo
+        this.client.channel(null);
     }
 }

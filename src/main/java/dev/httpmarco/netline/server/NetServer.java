@@ -4,9 +4,9 @@ import dev.httpmarco.netline.NetworkComponentState;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
-import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.ServerBootstrap;
+import io.netty5.channel.ChannelOption;
 import io.netty5.channel.EventLoopGroup;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -35,7 +35,10 @@ public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
         var bootstrap = new ServerBootstrap()
                 .group(bossGroup(), workerGroup)
                 .channelFactory(NetworkUtils.generateChannelFactory())
-                .childHandler(new NetChannelInitializer(new NetServerHandler(this)));
+                .childHandler(new NetChannelInitializer(new NetServerHandler(this)))
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.IP_TOS, 24)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
 
         bootstrap.bind(config().hostname(), config().port()).addListener(handleConnectionRelease());
     }

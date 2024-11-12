@@ -4,6 +4,7 @@ import dev.httpmarco.netline.NetworkComponentHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
+import dev.httpmarco.netline.tracking.VerifiedChannelActiveTracking;
 import io.netty5.channel.Channel;
 
 public final class NetServerHandler extends NetworkComponentHandler {
@@ -21,6 +22,8 @@ public final class NetServerHandler extends NetworkComponentHandler {
             }
             channel.id(it.id());
             channel.state(NetChannelState.READY);
+
+            this.server.callTracking(channel, new VerifiedChannelActiveTracking(channel));
         });
     }
 

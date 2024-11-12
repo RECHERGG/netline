@@ -16,7 +16,7 @@ public final class NetChannel {
 
     @Setter
     @Getter
-    private NetChannelState state = NetChannelState.AUTHENTICATION_PENDING;
+    private NetChannelState state = NetChannelState.ID_PENDING;
 
     public NetChannel(Channel channel) {
         this.channel = channel;

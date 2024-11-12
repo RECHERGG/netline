@@ -3,6 +3,7 @@ package dev.httpmarco.netline;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
+import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.packet.Packet;
 import io.netty5.channel.Channel;
 import io.netty5.channel.ChannelHandlerContext;
@@ -27,7 +28,7 @@ public abstract class NetworkComponentHandler extends SimpleChannelInboundHandle
             return;
         }
 
-        if(netChannel.state() != NetChannelState.READY) {
+        if(netChannel.state() != NetChannelState.READY && !(packet instanceof ChannelIdentifyPacket)){
             log.debug("Channel {} is not ready to receive packets", netChannel);
             return;
         }

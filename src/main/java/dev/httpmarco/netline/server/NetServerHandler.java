@@ -3,12 +3,15 @@ package dev.httpmarco.netline.server;
 import dev.httpmarco.netline.NetworkComponentHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import io.netty5.channel.Channel;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class NetServerHandler extends NetworkComponentHandler {
 
     private final NetServer server;
+
+    public NetServerHandler(NetServer server) {
+        super(server);
+        this.server = server;
+    }
 
     @Override
     public NetChannel findChannel(Channel channel) {

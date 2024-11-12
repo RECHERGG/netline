@@ -4,13 +4,16 @@ import dev.httpmarco.netline.NetworkComponentHandler;
 import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import io.netty5.channel.Channel;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor
 public class NetClientHandler extends NetworkComponentHandler {
 
     private final NetClient client;
+
+    public NetClientHandler(NetClient client) {
+        super(client);
+        this.client = client;
+    }
 
     @Override
     public NetChannel findChannel(Channel channel) {

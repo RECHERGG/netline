@@ -11,7 +11,7 @@ import org.junit.jupiter.api.*;
 @Nested
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("NetLine - Communication component test")
-public class NetServerTest {
+public class NetlineTest {
 
     private static NetServer server;
     private static NetClient client;
@@ -45,6 +45,7 @@ public class NetServerTest {
     @DisplayName("Client state check")
     public void testClientState() {
         assert client.state() == NetworkComponentState.CONNECTION_ESTABLISHED;
+        assert server.channels().size() == 1;
     }
 
     @Test
@@ -58,7 +59,7 @@ public class NetServerTest {
 
         assert client.state() == NetworkComponentState.CONNECTION_CLOSED;
         assert client.bossGroup().isShutdown();
-        assert server.clients().isEmpty();
+        assert server.channels().isEmpty();
     }
 
     @Test

@@ -1,6 +1,8 @@
 package dev.httpmarco.netline.client;
 
-import dev.httpmarco.netline.channel.ChannelInitializer;
+import dev.httpmarco.netline.channel.NetChannel;
+import dev.httpmarco.netline.channel.NetChannelInitializer;
+import dev.httpmarco.netline.channel.NetClientHandler;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.Bootstrap;
@@ -8,6 +10,7 @@ import io.netty5.bootstrap.Bootstrap;
 public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
 
     private final Bootstrap bootstrap;
+    private NetChannel channel;
 
     public NetClient() {
         super(0, new NetClientConfig());
@@ -15,11 +18,13 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
         this.bootstrap = new Bootstrap()
                 .group(bossGroup())
                 .channelFactory(NetworkUtils::createChannelFactory)
-                .handler(new ChannelInitializer());
+                .handler(new NetChannelInitializer(new NetClientHandler()));
     }
 
     @Override
     public void boot() {
         this.bootstrap.connect(config().hostname(), config().port()).addListener(handleConnectionRelease());
     }
+
+
 }

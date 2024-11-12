@@ -31,6 +31,4 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
     public void boot() {
         this.bootstrap.connect(config().hostname(), config().port()).addListener(handleConnectionRelease());
     }
-
-
 }

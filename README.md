@@ -1,6 +1,5 @@
-
 <div align="center">
-    # Netline
+# Netline
 </div>
 
 ### Configure the network platform
@@ -36,3 +35,9 @@ All tracking types are listed below. The tracking types can be used on the serve
 |----------------------|----------------------|-------------------------------------------------------------------------------------------------------|
 | ShutdownTracking     | Server, Node, Client | Tracks the component shutdown event                                                                   |
 | SuccessStartTracking | Server, Node, Client | Tracks the component start event. On Client: Only call if the connection is successfully established. |
+
+### Coming features
+
+- Hostname and port whitelist 
+- Packet History
+- Security adapter

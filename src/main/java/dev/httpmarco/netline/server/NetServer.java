@@ -4,6 +4,7 @@ import dev.httpmarco.netline.NetworkComponentState;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
+import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.EventLoopGroup;

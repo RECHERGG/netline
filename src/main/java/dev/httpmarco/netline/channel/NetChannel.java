@@ -6,14 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Getter
 @Accessors(fluent = true)
 public final class NetChannel {
 
+    @Setter
+    @Getter
     private String id;
     private final Channel channel;
 
     @Setter
+    @Getter
     private NetChannelState state = NetChannelState.AUTHENTICATION_PENDING;
 
     public NetChannel(Channel channel) {
@@ -22,5 +24,13 @@ public final class NetChannel {
 
     public void send(Packet packet) {
         channel.writeAndFlush(packet);
+    }
+
+    public void close() {
+        this.channel.close();
+    }
+
+    public boolean verifyChannel(Channel channel) {
+        return this.channel.equals(channel);
     }
 }

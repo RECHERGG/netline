@@ -2,6 +2,8 @@ package dev.httpmarco.netline.server;
 
 import dev.httpmarco.netline.NetworkComponentHandler;
 import dev.httpmarco.netline.channel.NetChannel;
+import dev.httpmarco.netline.channel.NetChannelState;
+import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import io.netty5.channel.Channel;
 
 public class NetServerHandler extends NetworkComponentHandler {
@@ -11,11 +13,20 @@ public class NetServerHandler extends NetworkComponentHandler {
     public NetServerHandler(NetServer server) {
         super(server);
         this.server = server;
+
+        this.server.track(ChannelIdentifyPacket.class, (channel, it) -> {
+            if(channel.state() != NetChannelState.ID_PENDING) {
+                channel.close();
+                return;
+            }
+            channel.id(it.id());
+            channel.state(NetChannelState.READY);
+        });
     }
 
     @Override
     public NetChannel findChannel(Channel channel) {
-        return server.channels().stream().filter(c -> c.channel().equals(channel)).findFirst().orElse(null);
+        return server.channels().stream().filter(it -> it.verifyChannel(channel)).findFirst().orElse(null);
     }
 
     @Override

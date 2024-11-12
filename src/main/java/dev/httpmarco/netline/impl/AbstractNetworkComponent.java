@@ -2,6 +2,7 @@ package dev.httpmarco.netline.impl;
 
 import dev.httpmarco.netline.NetworkComponent;
 import dev.httpmarco.netline.NetworkComponentState;
+import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.config.NetworkConfig;
 import dev.httpmarco.netline.tracking.ShutdownTracking;
 import dev.httpmarco.netline.tracking.SuccessStartTracking;
@@ -20,13 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Getter
 @Accessors(fluent = true)
 public abstract class AbstractNetworkComponent<C extends NetworkConfig> implements NetworkComponent<C> {
 
-    private final Map<Class<? extends Tracking>, List<Consumer<? extends Tracking>>> trackers = new HashMap<>();
+    private final Map<Class<? extends Tracking>, List<BiConsumer<NetChannel, ? extends Tracking>>> trackers = new HashMap<>();
     private final EventLoopGroup bossGroup;
     private final C config;
 
@@ -40,9 +42,9 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
 
     @Override
     public void stop() {
-        this.bossGroup.shutdownGracefully().addListener(it -> {
+        this.bossGroup.shutdownGracefully().addListener(_ -> {
             this.state = NetworkComponentState.CONNECTION_CLOSED;
-            callTracking(new ShutdownTracking());
+            callTracking(null, new ShutdownTracking());
         });
     }
 
@@ -52,8 +54,12 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
         return this;
     }
 
-    @Override
     public <T extends Tracking> NetworkComponent<C> track(Class<T> tracking, Consumer<T> apply) {
+        return this.track(tracking, (_, tracking1) -> apply.accept(tracking1));
+    }
+
+    @Override
+    public <T extends Tracking> NetworkComponent<C> track(Class<T> tracking, BiConsumer<NetChannel, T> apply) {
         var currentTrackers = trackers.getOrDefault(tracking, new ArrayList<>());
         currentTrackers.add(apply);
         this.trackers.put(tracking, currentTrackers);
@@ -61,9 +67,9 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Tracking> void callTracking(@NotNull T tracking) {
+    public <T extends Tracking> void callTracking(NetChannel channel, @NotNull T tracking) {
         if(trackers.containsKey(tracking.getClass())) {
-            trackers.get(tracking.getClass()).forEach(it -> ((Consumer<Tracking>) it).accept(tracking));
+            trackers.get(tracking.getClass()).forEach(it -> ((BiConsumer<NetChannel, Tracking>) it).accept(channel, tracking));
         }
     }
 
@@ -71,7 +77,7 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
         return it -> {
             if(it.isSuccess()) {
                 state(NetworkComponentState.CONNECTION_ESTABLISHED);
-                callTracking(new SuccessStartTracking());
+                callTracking(null, new SuccessStartTracking());
             } else {
                 state(NetworkComponentState.CONNECTION_FAILED);
                 //todo: call tracking

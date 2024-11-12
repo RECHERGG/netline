@@ -6,7 +6,7 @@ import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import io.netty5.channel.Channel;
 
-public class NetServerHandler extends NetworkComponentHandler {
+public final class NetServerHandler extends NetworkComponentHandler {
 
     private final NetServer server;
 

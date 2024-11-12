@@ -41,3 +41,4 @@ All tracking types are listed below. The tracking types can be used on the serve
 - Hostname and port whitelist 
 - Packet History
 - Security adapter
+- Class supplier configuration

@@ -5,7 +5,7 @@
 ### Configure the network platform
 In this case, a simple server reference will be used, but the API is the same on the client and node side.
 ```java
-Net.line()
+var server = Net.line()
     // Initializes the server on this connection (Possible types: client, node)
     .server()
     
@@ -27,20 +27,24 @@ Net.line()
     // Binds and starts the server with the above configurations and tracking settings
     .bind();
 
+// send a packet to every channel 
+server.broadcast(new StringBasePacket("Hello World!"));
 ```
 ### All tracking types
 All tracking types are listed below. The tracking types can be used on the server, node, and client side.
 
-| Tracking Type        | Components           | Description                                                                                           |
-|----------------------|----------------------|-------------------------------------------------------------------------------------------------------|
-| ShutdownTracking     | Server, Node, Client | Tracks the component shutdown event                                                                   |
-| SuccessStartTracking | Server, Node, Client | Tracks the component start event. On Client: Only call if the connection is successfully established. |
+| Tracking Type                 | Components           | Description                                                                                                   |
+|-------------------------------|----------------------|---------------------------------------------------------------------------------------------------------------|
+| ShutdownTracking              | Server, Node, Client | Tracks the component shutdown event                                                                           |
+| SuccessStartTracking          | Server, Node, Client | Tracks the component start event. On Client: Only call if the connection is successfully established.         |
+| VerifiedChannelActiveTracking | Server, Node, Client | Tracks the verified channel active event. On Client: Only call if the connection is successfully established. |
 
 ### Base default packets
 
-| Packet name      | description                         | Declaration type |
-|------------------|-------------------------------------|------------------|
-| StringBasePacket | A simple packet that sends a string | `String.class`   |
+| Packet name      | description                         | Declaration type              |
+|------------------|-------------------------------------|-------------------------------|
+| StringBasePacket | A simple packet that sends a string | `String.class`                |
+| IntBasePacket    | A simple packet that sends an int   | `Integer.class` & `int.class` |
 
 
 ### Coming features

@@ -1,11 +1,14 @@
 package dev.httpmarco.netline;
 
 import dev.httpmarco.netline.client.NetClient;
+import dev.httpmarco.netline.packet.TestSimplePacket;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.tracking.ShutdownTracking;
 import dev.httpmarco.netline.tracking.SuccessStartTracking;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Log4j2
 @Nested
@@ -35,14 +38,14 @@ public class NetlineTest {
 
     @Test
     @Order(80)
-    @DisplayName("Server state check")
+    @DisplayName("[server] Check connection state is established")
     public void testServerState() {
         assert server.state() == NetworkComponentState.CONNECTION_ESTABLISHED;
     }
 
     @Test
     @Order(90)
-    @DisplayName("Client state check")
+    @DisplayName("[client] Check connection state is established")
     public void testClientState() throws InterruptedException {
 
         Thread.sleep(1000);
@@ -52,8 +55,24 @@ public class NetlineTest {
     }
 
     @Test
+    @Order(91)
+    @DisplayName("[client] Send a simple test packet to server")
+    public void clientSendPacket() throws InterruptedException {
+        var result = new AtomicBoolean(false);
+
+        server.track(TestSimplePacket.class, packet -> {
+            System.out.println("polo");
+            result.set(packet.completed());
+        });
+        client.send(new TestSimplePacket(true));
+
+        Thread.sleep(500);
+        assert result.get();
+    }
+
+    @Test
     @Order(99)
-    @DisplayName("Client close test")
+    @DisplayName("[client] Close the connection")
     public void testClientClose() throws InterruptedException {
         client.stop();
 
@@ -67,7 +86,7 @@ public class NetlineTest {
 
     @Test
     @Order(100)
-    @DisplayName("Server close test")
+    @DisplayName("[server] Close the server binding")
     public void testStop() throws InterruptedException {
         server.stop();
 

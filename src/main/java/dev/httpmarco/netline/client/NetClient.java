@@ -4,6 +4,8 @@ import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.channel.NetClientHandler;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
+import dev.httpmarco.netline.packet.BroadcastPacket;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.Bootstrap;
 import io.netty5.channel.ChannelOption;
@@ -42,5 +44,14 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
     @Override
     public void boot() {
         this.bootstrap.connect(config().hostname(), config().port()).addListener(handleConnectionRelease());
+    }
+
+
+    public void broadcast(Packet packet) {
+        this.channel.send(new BroadcastPacket(packet));
+    }
+
+    public void send(Packet packet) {
+        this.channel.send(packet);
     }
 }

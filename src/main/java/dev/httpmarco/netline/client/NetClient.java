@@ -2,9 +2,11 @@ package dev.httpmarco.netline.client;
 
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
+import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.channel.NetClientHandler;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
 import dev.httpmarco.netline.packet.BroadcastPacket;
+import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.Bootstrap;
@@ -39,6 +41,18 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
         if(!config().disableTcpFastOpen() && Epoll.isTcpFastOpenClientSideAvailable()) {
             bootstrap.option(ChannelOption.TCP_FASTOPEN_CONNECT, true);
         }
+
+        track(ChannelIdentifyPacket.class, (channel, packet) -> {
+
+            if(!this.channel.equals(channel)) {
+                channel.close();
+                return;
+            }
+
+            channel.id(packet.id());
+            channel.state(NetChannelState.READY);
+
+        });
     }
 
     @Override

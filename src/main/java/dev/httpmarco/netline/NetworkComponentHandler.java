@@ -29,7 +29,7 @@ public abstract class NetworkComponentHandler extends SimpleChannelInboundHandle
         }
 
         if(netChannel.state() != NetChannelState.READY && !(packet instanceof ChannelIdentifyPacket)){
-            log.debug("Channel {} is not ready to receive packets", netChannel);
+            log.warn("Channel {} is not ready to receive packets", netChannel);
             return;
         }
 

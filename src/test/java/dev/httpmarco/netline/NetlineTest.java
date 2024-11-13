@@ -60,13 +60,23 @@ public class NetlineTest {
     public void clientSendPacket() throws InterruptedException {
         var result = new AtomicBoolean(false);
 
-        server.track(TestSimplePacket.class, packet -> {
-            System.out.println("polo");
-            result.set(packet.completed());
-        });
+        server.track(TestSimplePacket.class, packet -> result.set(packet.completed()));
         client.send(new TestSimplePacket(true));
 
         Thread.sleep(500);
+        assert result.get();
+    }
+
+    @Test
+    @Order(91)
+    @DisplayName("[server] Send every connect client a test packet")
+    public void serverBroadcast() throws InterruptedException {
+        var result = new AtomicBoolean(false);
+
+        client.track(TestSimplePacket.class, packet -> result.set(packet.completed()));
+        server.broadcast(new TestSimplePacket(true));
+
+        Thread.sleep(1000);
         assert result.get();
     }
 

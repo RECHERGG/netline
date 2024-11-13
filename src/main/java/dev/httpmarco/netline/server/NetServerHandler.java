@@ -34,6 +34,9 @@ public final class NetServerHandler extends NetworkComponentHandler {
             channel.id(it.id());
             channel.state(NetChannelState.READY);
 
+            // response a success with the id
+            channel.send(it);
+
             this.server.callTracking(channel, new VerifiedChannelActiveTracking(channel));
         });
     }

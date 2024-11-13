@@ -22,6 +22,9 @@ public class NetClientHandler extends NetworkComponentHandler {
 
     @Override
     public void handshakeChannel(@NotNull NetChannel netChannel) {
+        client.channel(netChannel);
+
+        netChannel.state(NetChannelState.ID_PENDING);
         netChannel.send(new ChannelIdentifyPacket(client.config().id()));
     }
 

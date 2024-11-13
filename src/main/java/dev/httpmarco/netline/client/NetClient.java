@@ -46,7 +46,6 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
         this.bootstrap.connect(config().hostname(), config().port()).addListener(handleConnectionRelease());
     }
 
-
     public void broadcast(Packet packet) {
         this.channel.send(new BroadcastPacket(packet));
     }

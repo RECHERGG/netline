@@ -23,7 +23,7 @@ public final class NetServerHandler extends NetworkComponentHandler {
                 return;
             }
 
-            if (server.channels().stream().anyMatch(s -> s.id().equals(it.id()))) {
+            if (it.id() != null && server.channels().stream().anyMatch(s -> s.id() != null && s.id().equals(it.id()))) {
                 log.warn("Duplicate channel name detected: {}", it.id());
                 log.warn("Channel names must be unique!");
 

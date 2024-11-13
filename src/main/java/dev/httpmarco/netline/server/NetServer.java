@@ -47,7 +47,6 @@ public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
     }
 
     public void broadcast(Packet packet) {
-        // todo need junit test
         this.channels.stream().filter(it -> it.state() == NetChannelState.READY).forEach(channel -> channel.send(packet));
     }
 

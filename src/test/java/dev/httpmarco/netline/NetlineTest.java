@@ -108,8 +108,25 @@ public class NetlineTest {
     @Test
     @Order(92)
     @DisplayName("[server] Test hostname blacklist")
-    public void testBlacklist()  {
+    public void testBlacklist() throws InterruptedException {
+        var result = new AtomicBoolean(false);
+        server.config(it -> it.blacklist().add("127.0.0.1"));
 
+        server.track(WhitelistTracking.class, (_, _) -> result.set(true));
+
+        var testClient = Net.line().client();
+        testClient.boot();
+
+        Thread.sleep(2000);
+
+        if(testClient.state() == NetworkComponentState.CONNECTING) {
+            testClient.stop();
+            assert false;
+        }
+
+        // we reset the whitelist for the next test
+        server.config(it -> it.blacklist().remove("127.0.0.1"));
+        assert result.get();
     }
 
     @Test

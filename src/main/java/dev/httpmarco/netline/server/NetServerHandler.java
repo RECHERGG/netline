@@ -49,11 +49,14 @@ public final class NetServerHandler extends NetworkComponentHandler {
 
     @Override
     public void handshakeChannel(NetChannel netChannel) {
-        if(!server.config().whitelist().isEmpty() && !server.config().whitelist().contains(netChannel.hostname())) {
+        var hostname = netChannel.hostname();
+        var config = server.config();
+
+        if((!config.whitelist().isEmpty() && !config.whitelist().contains(hostname)) || (!config.blacklist().isEmpty() && config.blacklist().contains(hostname) && !config.whitelist().contains(hostname))) {
             netChannel.close();
 
             server.callTracking(netChannel, new WhitelistTracking(netChannel));
-            log.info("Channel {} is not in the whitelist", netChannel.hostname());
+            log.info("Channel {} is not in the whitelist or disabled in blacklist!", hostname);
             return;
         }
 

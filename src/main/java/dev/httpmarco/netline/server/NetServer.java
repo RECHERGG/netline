@@ -3,7 +3,9 @@ package dev.httpmarco.netline.server;
 import dev.httpmarco.netline.NetworkComponentState;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.channel.NetChannel;
+import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.impl.AbstractNetworkComponent;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.ChannelOption;
@@ -13,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Accessors(fluent = true)
 public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
@@ -41,5 +44,20 @@ public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
         bootstrap.bind(config().hostname(), config().port()).addListener(handleConnectionRelease());
+    }
+
+    public void broadcast(Packet packet) {
+        // todo need junit test
+        this.channels.stream().filter(it -> it.state() == NetChannelState.READY).forEach(channel -> channel.send(packet));
+    }
+
+    public void send(String id, Packet packet) {
+        // todo need junit test
+        this.send(channel -> channel.id().equals(id), packet);
+    }
+
+    public void send(Predicate<NetChannel> predicate, Packet packet) {
+        // todo need junit test
+        this.channels.stream().filter(predicate).forEach(channel -> channel.send(packet));
     }
 }

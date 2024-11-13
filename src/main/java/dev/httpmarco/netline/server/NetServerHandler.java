@@ -6,7 +6,9 @@ import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.tracking.VerifiedChannelActiveTracking;
 import io.netty5.channel.Channel;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public final class NetServerHandler extends NetworkComponentHandler {
 
     private final NetServer server;
@@ -16,10 +18,19 @@ public final class NetServerHandler extends NetworkComponentHandler {
         this.server = server;
 
         this.server.track(ChannelIdentifyPacket.class, (channel, it) -> {
-            if(channel.state() != NetChannelState.ID_PENDING) {
+            if (channel.state() != NetChannelState.ID_PENDING) {
                 channel.close();
                 return;
             }
+
+            if (server.channels().stream().anyMatch(s -> s.id().equals(it.id()))) {
+                log.warn("Duplicate channel name detected: {}", it.id());
+                log.warn("Channel names must be unique!");
+
+                channel.close();
+                return;
+            }
+
             channel.id(it.id());
             channel.state(NetChannelState.READY);
 

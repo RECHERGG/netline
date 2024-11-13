@@ -33,4 +33,8 @@ public final class NetChannel {
     public boolean verifyChannel(Channel channel) {
         return this.channel.equals(channel);
     }
+
+    public String hostname() {
+        return this.channel.remoteAddress().toString().split(":", -1)[0].substring(1);
+    }
 }

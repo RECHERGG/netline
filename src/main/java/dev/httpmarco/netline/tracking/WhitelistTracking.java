@@ -3,9 +3,9 @@ package dev.httpmarco.netline.tracking;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.tracking.defaults.NetChannelTracking;
 
-public final class VerifiedChannelActiveTracking extends NetChannelTracking {
+public final class WhitelistTracking extends NetChannelTracking {
 
-    public VerifiedChannelActiveTracking(NetChannel channel) {
+    public WhitelistTracking(NetChannel channel) {
         super(channel);
     }
 }

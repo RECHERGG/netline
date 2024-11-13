@@ -5,6 +5,7 @@ import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.tracking.VerifiedChannelActiveTracking;
+import dev.httpmarco.netline.tracking.WhitelistTracking;
 import io.netty5.channel.Channel;
 import lombok.extern.log4j.Log4j2;
 
@@ -48,6 +49,14 @@ public final class NetServerHandler extends NetworkComponentHandler {
 
     @Override
     public void handshakeChannel(NetChannel netChannel) {
+        if(!server.config().whitelist().isEmpty() && !server.config().whitelist().contains(netChannel.hostname())) {
+            netChannel.close();
+
+            server.callTracking(netChannel, new WhitelistTracking(netChannel));
+            log.info("Channel {} is not in the whitelist", netChannel.hostname());
+            return;
+        }
+
         // todo maybe security stuff here
         this.server.channels().add(netChannel);
     }

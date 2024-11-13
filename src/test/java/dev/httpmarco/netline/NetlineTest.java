@@ -5,6 +5,7 @@ import dev.httpmarco.netline.packet.TestSimplePacket;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.tracking.ShutdownTracking;
 import dev.httpmarco.netline.tracking.SuccessStartTracking;
+import dev.httpmarco.netline.tracking.WhitelistTracking;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.*;
 
@@ -78,6 +79,37 @@ public class NetlineTest {
 
         Thread.sleep(1000);
         assert result.get();
+    }
+
+    @Test
+    @Order(91)
+    @DisplayName("[server] Test hostname whitelist")
+    public void testHostNameWhitelist() throws InterruptedException {
+        var result = new AtomicBoolean(false);
+        server.config(it -> it.whitelist().add("127.0.0.2"));
+
+        server.track(WhitelistTracking.class, (_, _) -> result.set(true));
+
+        var testClient = Net.line().client();
+        testClient.boot();
+
+        Thread.sleep(2000);
+
+        if(testClient.state() == NetworkComponentState.CONNECTING) {
+            testClient.stop();
+            assert false;
+        }
+
+        // we reset the whitelist for the next test
+        server.config(it -> it.whitelist().remove("127.0.0.2"));
+        assert result.get();
+    }
+
+    @Test
+    @Order(92)
+    @DisplayName("[server] Test hostname blacklist")
+    public void testBlacklist()  {
+
     }
 
     @Test

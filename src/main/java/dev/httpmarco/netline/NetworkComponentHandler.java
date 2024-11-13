@@ -9,14 +9,19 @@ import io.netty5.channel.Channel;
 import io.netty5.channel.ChannelHandlerContext;
 import io.netty5.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+@Log4j2
 @AllArgsConstructor
 public abstract class NetworkComponentHandler extends SimpleChannelInboundHandler<Packet> {
 
-    private static final Logger log = LogManager.getLogger(NetworkComponentHandler.class);
     private AbstractNetworkComponent<?> component;
 
     @Override

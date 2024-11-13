@@ -4,6 +4,7 @@ import dev.httpmarco.netline.NetworkComponent;
 import dev.httpmarco.netline.NetworkComponentState;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.config.NetworkConfig;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.tracking.ShutdownTracking;
 import dev.httpmarco.netline.tracking.SuccessStartTracking;
 import dev.httpmarco.netline.tracking.Tracking;
@@ -23,12 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter
 @Accessors(fluent = true)
 public abstract class AbstractNetworkComponent<C extends NetworkConfig> implements NetworkComponent<C> {
 
     private final Map<Class<? extends Tracking>, List<BiConsumer<NetChannel, ? extends Tracking>>> trackers = new HashMap<>();
+    private final Map<String, Function<Void, Packet>> responders = new HashMap<>();
     private final EventLoopGroup bossGroup;
     private final C config;
 
@@ -68,14 +71,14 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
 
     @SuppressWarnings("unchecked")
     public <T extends Tracking> void callTracking(NetChannel channel, @NotNull T tracking) {
-        if(trackers.containsKey(tracking.getClass())) {
+        if (trackers.containsKey(tracking.getClass())) {
             trackers.get(tracking.getClass()).forEach(it -> ((BiConsumer<NetChannel, Tracking>) it).accept(channel, tracking));
         }
     }
 
     public FutureListener<? super Channel> handleConnectionRelease() {
         return it -> {
-            if(it.isSuccess()) {
+            if (it.isSuccess()) {
                 state(NetworkComponentState.CONNECTION_ESTABLISHED);
                 callTracking(null, new SuccessStartTracking());
             } else {
@@ -83,5 +86,10 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
                 //todo: call tracking
             }
         };
+    }
+
+    @Override
+    public void responderOf(String id, Function<Void, Packet> responder) {
+        this.responders.put(id, responder);
     }
 }

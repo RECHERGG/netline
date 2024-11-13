@@ -51,7 +51,7 @@ public final class NetChannel {
         return requestAsync(id, packet).get(5, TimeUnit.SECONDS);
     }
 
-    public <T extends Packet> CompletableFuture<T> requestAsync(String id, Class<T> packet) {
+    public <T extends Packet> @NotNull CompletableFuture<T> requestAsync(String id, Class<T> packet) {
         var future = new CompletableFuture<T>();
         var requestId = UUID.randomUUID();
 

@@ -4,10 +4,8 @@ import dev.httpmarco.netline.NetworkComponentHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
-import dev.httpmarco.netline.request.RequestPacket;
-import dev.httpmarco.netline.request.RequestRegister;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.ResponderRegisterPacket;
-import dev.httpmarco.netline.request.ResponsePacket;
 import dev.httpmarco.netline.tracking.VerifiedChannelActiveTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
 import io.netty5.channel.Channel;
@@ -45,10 +43,8 @@ public final class NetServerHandler extends NetworkComponentHandler {
             this.server.callTracking(channel, new VerifiedChannelActiveTracking(channel));
         });
 
-        this.server.track(ResponderRegisterPacket.class, (channel, packet) -> server.responders().put(packet.id(), unused -> {
-            //todo
-            return channel.request(packet.id(), null);
-        }));
+        // redirect the request to the correct channel
+        this.server.track(ResponderRegisterPacket.class, (channel, packet) -> server.responders().put(packet.id(), unused -> channel.request(packet.id(), Packet.class)));
     }
 
     @Override

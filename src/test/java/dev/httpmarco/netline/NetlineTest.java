@@ -138,6 +138,7 @@ public class NetlineTest {
     @DisplayName("[client <-> server] External responder registration")
     public void responderRegisterTest() throws InterruptedException {
         var responderId = "testA";
+        var responder2Id = "testB";
 
         client.responderOf(responderId, _ -> new TestSimplePacket(true));
 
@@ -145,6 +146,10 @@ public class NetlineTest {
 
         assert server.responders().size() == 1;
         assert server.responders().containsKey(responderId);
+
+        server.responderOf(responder2Id, _ -> new TestSimplePacket(true));
+        assert server.responders().size() == 2;
+        assert server.responders().containsKey(responder2Id);
     }
 
     @Test
@@ -166,6 +171,29 @@ public class NetlineTest {
         assert request != null;
         assert request.completed();
         log.info("Received response from client: {}", request);
+
+        assert result.get();
+    }
+
+    @Test
+    @Order(94)
+    @DisplayName("[server <-> client] External responder request")
+    public void responderClientToServerRequestTest() throws InterruptedException {
+        var responderId = "testB";
+        var result = new AtomicBoolean(false);
+
+        // first test async request
+        client.channel().requestAsync(responderId, TestSimplePacket.class).whenComplete((testSimplePacket, throwable) ->  {
+            result.set(true);
+            log.info("Received async response from server: {}", testSimplePacket);
+        });
+
+        Thread.sleep(500);
+
+        TestSimplePacket request = client.channel().request(responderId, TestSimplePacket.class);
+        assert request != null;
+        assert request.completed();
+        log.info("Received response from server: {}", request);
 
         assert result.get();
     }

@@ -58,15 +58,6 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
 
             channel.id(packet.id());
             channel.state(NetChannelState.READY);
-
-        });
-
-        track(RequestPacket.class, (channel, requestPacket) -> {
-            if (!responders().containsKey(requestPacket.id())) {
-                channel.send(new BadRequestPacket(requestPacket.requestId()));
-                return;
-            }
-            this.channel.send(new ResponsePacket(requestPacket.requestId(), this.responders().get(requestPacket.id()).apply(null)));
         });
     }
 

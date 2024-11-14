@@ -5,6 +5,10 @@ import dev.httpmarco.netline.NetworkComponentState;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.config.NetworkConfig;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.request.BadRequestPacket;
+import dev.httpmarco.netline.request.RequestPacket;
+import dev.httpmarco.netline.request.RequestRegister;
+import dev.httpmarco.netline.request.ResponsePacket;
 import dev.httpmarco.netline.tracking.ShutdownTracking;
 import dev.httpmarco.netline.tracking.SuccessStartTracking;
 import dev.httpmarco.netline.tracking.Tracking;
@@ -16,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -27,6 +33,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Getter
+@Log4j2
 @Accessors(fluent = true)
 public abstract class AbstractNetworkComponent<C extends NetworkConfig> implements NetworkComponent<C> {
 
@@ -41,6 +48,22 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
     public AbstractNetworkComponent(int bossGroupThreads, C config) {
         this.bossGroup = NetworkUtils.createEventLoopGroup(bossGroupThreads);
         this.config = config;
+
+        track(ResponsePacket.class, (channel, responsePacket) -> {
+            if(!RequestRegister.contains(responsePacket.requestId())) {
+                log.warn("Request {} not found!", responsePacket.requestId());
+                return;
+            }
+            RequestRegister.apply(responsePacket.requestId(), responsePacket.packet());
+        });
+
+        track(RequestPacket.class, (channel, requestPacket) -> {
+            if (!responders().containsKey(requestPacket.id())) {
+                channel.send(new BadRequestPacket(requestPacket.requestId()));
+                return;
+            }
+            channel.send(new ResponsePacket(requestPacket.requestId(), this.responders().get(requestPacket.id()).apply(null)));
+        });
     }
 
     @Override

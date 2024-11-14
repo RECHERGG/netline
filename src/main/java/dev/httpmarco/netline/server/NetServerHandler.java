@@ -49,14 +49,6 @@ public final class NetServerHandler extends NetworkComponentHandler {
             //todo
             return channel.request(packet.id(), null);
         }));
-
-        this.server.track(ResponsePacket.class, (channel, responsePacket) -> {
-            if(!RequestRegister.contains(responsePacket.requestId())) {
-                log.warn("Request {} not found!", responsePacket.requestId());
-                return;
-            }
-            RequestRegister.apply(responsePacket.requestId(), responsePacket.packet());
-        });
     }
 
     @Override

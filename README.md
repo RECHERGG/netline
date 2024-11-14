@@ -45,6 +45,7 @@ All tracking types are listed below. The tracking types can be used on the serve
 |------------------|-------------------------------------|-------------------------------|
 | StringBasePacket | A simple packet that sends a string | `String.class`                |
 | IntBasePacket    | A simple packet that sends an int   | `Integer.class` & `int.class` |
+| UuidBasePacket   | A packet for uniqueIds              | `UUID.class`                  |    
 
 
 ### Coming features

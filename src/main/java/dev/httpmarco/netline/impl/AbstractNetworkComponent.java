@@ -35,7 +35,7 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
     private final EventLoopGroup bossGroup;
     private final C config;
 
-    @Setter(AccessLevel.PROTECTED)
+    @Setter
     private NetworkComponentState state = NetworkComponentState.INITIALIZING;
 
     public AbstractNetworkComponent(int bossGroupThreads, C config) {

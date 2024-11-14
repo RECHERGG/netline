@@ -2,10 +2,12 @@ package dev.httpmarco.netline.packet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(fluent = true)
+@ToString
 @AllArgsConstructor
 public final class TestSimplePacket extends Packet {
 

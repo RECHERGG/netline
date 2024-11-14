@@ -86,7 +86,9 @@ public class NetlineTest {
     @DisplayName("[server] Test hostname whitelist")
     public void testHostNameWhitelist() throws InterruptedException {
         var result = new AtomicBoolean(false);
-        server.config(it -> it.whitelist().add("127.0.0.2"));
+        var whitelistedIp = "127.0.0.2";
+
+        server.config(it -> it.whitelist().add(whitelistedIp));
 
         server.track(WhitelistTracking.class, (_, _) -> result.set(true));
 
@@ -101,7 +103,7 @@ public class NetlineTest {
         }
 
         // we reset the whitelist for the next test
-        server.config(it -> it.whitelist().remove("127.0.0.2"));
+        server.config(it -> it.whitelist().remove(whitelistedIp));
         assert result.get();
     }
 
@@ -110,7 +112,9 @@ public class NetlineTest {
     @DisplayName("[server] Test hostname blacklist")
     public void testBlacklist() throws InterruptedException {
         var result = new AtomicBoolean(false);
-        server.config(it -> it.blacklist().add("127.0.0.1"));
+        var blockedIp = "127.0.0.1";
+
+        server.config(it -> it.blacklist().add(blockedIp));
 
         server.track(WhitelistTracking.class, (_, _) -> result.set(true));
 
@@ -125,7 +129,44 @@ public class NetlineTest {
         }
 
         // we reset the whitelist for the next test
-        server.config(it -> it.blacklist().remove("127.0.0.1"));
+        server.config(it -> it.blacklist().remove(blockedIp));
+        assert result.get();
+    }
+
+    @Test
+    @Order(93)
+    @DisplayName("[client <-> server] External responder registration")
+    public void responderRegisterTest() throws InterruptedException {
+        var responderId = "testA";
+
+        client.responderOf(responderId, _ -> new TestSimplePacket(true));
+
+        Thread.sleep(500);
+
+        assert server.responders().size() == 1;
+        assert server.responders().containsKey(responderId);
+    }
+
+    @Test
+    @Order(94)
+    @DisplayName("[client <-> server] External responder request")
+    public void responderServerToClientRequestTest() throws InterruptedException {
+        var responderId = "testA";
+        var result = new AtomicBoolean(false);
+
+        // first test async request
+        server.channels().get(0).requestAsync(responderId, TestSimplePacket.class).whenComplete((testSimplePacket, throwable) ->  {
+            result.set(true);
+            log.info("Received async response from client: {}", testSimplePacket);
+        });
+
+        Thread.sleep(500);
+
+        TestSimplePacket request = server.channels().get(0).request(responderId, TestSimplePacket.class);
+        assert request != null;
+        assert request.completed();
+        log.info("Received response from client: {}", request);
+
         assert result.get();
     }
 

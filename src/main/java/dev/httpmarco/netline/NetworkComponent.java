@@ -4,13 +4,17 @@ import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.config.NetworkConfig;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.tracking.Tracking;
+import lombok.SneakyThrows;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface NetworkComponent<C extends NetworkConfig> {
 
-    void boot();
+    CompletableFuture<Void> boot();
 
     void stop();
 
@@ -21,5 +25,10 @@ public interface NetworkComponent<C extends NetworkConfig> {
     NetworkComponent<C> config(Consumer<C> config);
 
     NetworkComponentState state();
+
+    @SneakyThrows
+    default void bootNow() {
+        this.boot().get(5, TimeUnit.SECONDS);
+    }
 
 }

@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 @Accessors(fluent = true)
@@ -60,8 +61,10 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
     }
 
     @Override
-    public void boot() {
-        this.bootstrap.connect(config().hostname(), config().port()).addListener(handleConnectionRelease());
+    public CompletableFuture<Void> boot() {
+        var future = new CompletableFuture<Void>();
+        this.bootstrap.connect(config().hostname(), config().port()).addListener(handleConnectionRelease()).addListener(it -> future.complete(null));
+        return future;
     }
 
     @Override

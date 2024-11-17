@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 @Accessors(fluent = true)
@@ -32,7 +33,8 @@ public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
     }
 
     @Override
-    public void boot() {
+    public CompletableFuture<Void> boot() {
+        var future = new CompletableFuture<Void>();
         state(NetworkComponentState.CONNECTING);
 
         var bootstrap = new ServerBootstrap()
@@ -43,7 +45,8 @@ public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
                 .childOption(ChannelOption.IP_TOS, 24)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-        bootstrap.bind(config().hostname(), config().port()).addListener(handleConnectionRelease());
+        bootstrap.bind(config().hostname(), config().port()).addListener(handleConnectionRelease()).addListener(it -> future.complete(null));
+        return future;
     }
 
     public void broadcast(Packet packet) {

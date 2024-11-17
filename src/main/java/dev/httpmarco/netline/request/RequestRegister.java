@@ -11,9 +11,22 @@ import java.util.concurrent.CompletableFuture;
 @UtilityClass
 public class RequestRegister {
 
-    private final Map<UUID, CompletableFuture<? extends Packet>> requests = new HashMap<>();
+    private final Map<UUID, CompletableFuture<Packet>> requests = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public void register(UUID id, CompletableFuture<? extends Packet> future) {
-        requests.put(id, future);
+        requests.put(id, (CompletableFuture<Packet>) future);
+    }
+
+    public boolean contains(UUID id) {
+        return requests.containsKey(id);
+    }
+
+    public void apply(UUID id, Packet packet) {
+        var future = requests.get(id);
+        if (future != null) {
+            future.complete(packet);
+            requests.remove(id);
+        }
     }
 }

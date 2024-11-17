@@ -9,7 +9,10 @@ import dev.httpmarco.netline.impl.AbstractNetworkComponent;
 import dev.httpmarco.netline.packet.BroadcastPacket;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.request.BadRequestPacket;
+import dev.httpmarco.netline.request.RequestPacket;
 import dev.httpmarco.netline.request.ResponderRegisterPacket;
+import dev.httpmarco.netline.request.ResponsePacket;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.Bootstrap;
 import io.netty5.channel.ChannelOption;
@@ -43,20 +46,19 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
 
 
-        if(!config().disableTcpFastOpen() && Epoll.isTcpFastOpenClientSideAvailable()) {
+        if (!config().disableTcpFastOpen() && Epoll.isTcpFastOpenClientSideAvailable()) {
             bootstrap.option(ChannelOption.TCP_FASTOPEN_CONNECT, true);
         }
 
         track(ChannelIdentifyPacket.class, (channel, packet) -> {
 
-            if(!this.channel.equals(channel)) {
+            if (!this.channel.equals(channel)) {
                 channel.close();
                 return;
             }
 
             channel.id(packet.id());
             channel.state(NetChannelState.READY);
-
         });
     }
 
@@ -71,7 +73,7 @@ public final class NetClient extends AbstractNetworkComponent<NetClientConfig> {
     public void responderOf(String id, Function<Void, Packet> responder) {
         super.responderOf(id, responder);
 
-        if(this.state() == NetworkComponentState.CONNECTING && channel.state() == NetChannelState.READY) {
+        if (this.state() == NetworkComponentState.CONNECTION_ESTABLISHED && channel.state() == NetChannelState.READY) {
             this.channel.send(new ResponderRegisterPacket(id));
         }
     }

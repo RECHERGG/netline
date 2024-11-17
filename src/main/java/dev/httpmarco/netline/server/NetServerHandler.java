@@ -4,7 +4,7 @@ import dev.httpmarco.netline.NetworkComponentHandler;
 import dev.httpmarco.netline.channel.NetChannel;
 import dev.httpmarco.netline.channel.NetChannelState;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
-import dev.httpmarco.netline.request.RequestPacket;
+import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.ResponderRegisterPacket;
 import dev.httpmarco.netline.tracking.VerifiedChannelActiveTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
@@ -43,13 +43,8 @@ public final class NetServerHandler extends NetworkComponentHandler {
             this.server.callTracking(channel, new VerifiedChannelActiveTracking(channel));
         });
 
-        this.server.track(ResponderRegisterPacket.class, (channel, packet) -> {
-
-        });
-
-        this.server.track(RequestPacket.class, (channel, requestPacket) -> {
-
-        });
+        // redirect the request to the correct channel
+        this.server.track(ResponderRegisterPacket.class, (channel, packet) -> server.responders().put(packet.id(), unused -> channel.request(packet.id(), Packet.class)));
     }
 
     @Override
@@ -62,7 +57,7 @@ public final class NetServerHandler extends NetworkComponentHandler {
         var hostname = netChannel.hostname();
         var config = server.config();
 
-        if((!config.whitelist().isEmpty() && !config.whitelist().contains(hostname)) || (!config.blacklist().isEmpty() && config.blacklist().contains(hostname) && !config.whitelist().contains(hostname))) {
+        if ((!config.whitelist().isEmpty() && !config.whitelist().contains(hostname)) || (!config.blacklist().isEmpty() && config.blacklist().contains(hostname) && !config.whitelist().contains(hostname))) {
             netChannel.close();
 
             server.callTracking(netChannel, new WhitelistTracking(netChannel));

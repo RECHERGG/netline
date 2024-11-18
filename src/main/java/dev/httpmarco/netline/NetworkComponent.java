@@ -16,7 +16,7 @@ public interface NetworkComponent<C extends NetworkConfig> {
 
     CompletableFuture<Void> boot();
 
-    void stop();
+    CompletableFuture<Void> stop();
 
     void responderOf(String id, Function<Void, Packet> responder);
 
@@ -27,8 +27,12 @@ public interface NetworkComponent<C extends NetworkConfig> {
     NetworkComponentState state();
 
     @SneakyThrows
-    default void bootNow() {
+    default void bootSync() {
         this.boot().get(5, TimeUnit.SECONDS);
     }
 
+    @SneakyThrows
+    default void stopSync() {
+        this.stop().get(5, TimeUnit.SECONDS);
+    }
 }

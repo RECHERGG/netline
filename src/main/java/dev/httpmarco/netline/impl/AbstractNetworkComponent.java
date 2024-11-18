@@ -16,18 +16,16 @@ import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.channel.Channel;
 import io.netty5.channel.EventLoopGroup;
 import io.netty5.util.concurrent.FutureListener;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -39,15 +37,19 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
 
     private final Map<Class<? extends Tracking>, List<BiConsumer<NetChannel, ? extends Tracking>>> trackers = new HashMap<>();
     private final Map<String, Function<Void, Packet>> responders = new HashMap<>();
-    private final EventLoopGroup bossGroup;
+    private final int bossGroupThreads;
     private final C config;
+
+
+    private EventLoopGroup bossGroup;
 
     @Setter
     private NetworkComponentState state = NetworkComponentState.INITIALIZING;
 
     public AbstractNetworkComponent(int bossGroupThreads, C config) {
-        this.bossGroup = NetworkUtils.createEventLoopGroup(bossGroupThreads);
+        this.bossGroupThreads = bossGroupThreads;
         this.config = config;
+        this.reinitializeEventLoopGroup();
 
         track(ResponsePacket.class, (channel, responsePacket) -> {
             if(!RequestRegister.contains(responsePacket.requestId())) {
@@ -67,11 +69,15 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
     }
 
     @Override
-    public void stop() {
+    public CompletableFuture<Void> stop() {
+        var future = new CompletableFuture<Void>();
         this.bossGroup.shutdownGracefully().addListener(_ -> {
             this.state = NetworkComponentState.CONNECTION_CLOSED;
+
+            future.complete(null);
             callTracking(null, new ShutdownTracking());
         });
+        return future;
     }
 
     @Override
@@ -114,5 +120,9 @@ public abstract class AbstractNetworkComponent<C extends NetworkConfig> implemen
     @Override
     public void responderOf(String id, Function<Void, Packet> responder) {
         this.responders.put(id, responder);
+    }
+
+    public void reinitializeEventLoopGroup() {
+        this.bossGroup = NetworkUtils.createEventLoopGroup(bossGroupThreads);
     }
 }

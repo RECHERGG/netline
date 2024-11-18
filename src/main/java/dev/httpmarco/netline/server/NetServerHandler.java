@@ -67,6 +67,8 @@ public final class NetServerHandler extends NetworkComponentHandler {
 
         // todo maybe security stuff here
         this.server.channels().add(netChannel);
+        log.error("Channel {} connected!", netChannel);
+        log.error("Total channels: {}", server.channels().size());
     }
 
     @Override

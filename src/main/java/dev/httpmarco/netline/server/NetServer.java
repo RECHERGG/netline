@@ -49,6 +49,14 @@ public class NetServer extends AbstractNetworkComponent<NetServerConfig> {
         return future;
     }
 
+    @Override
+    public CompletableFuture<Void> stop() {
+        for (NetChannel channel : this.channels) {
+            channel.close();
+        }
+        return super.stop();
+    }
+
     public void broadcast(Packet packet) {
         this.channels.stream().filter(it -> it.state() == NetChannelState.READY).forEach(channel -> channel.send(packet));
     }

@@ -1,6 +1,7 @@
 package dev.httpmarco.netline.channel;
 
 import dev.httpmarco.netline.NetworkComponentHandler;
+import dev.httpmarco.netline.NetworkComponentState;
 import dev.httpmarco.netline.client.NetClient;
 import dev.httpmarco.netline.packet.ChannelIdentifyPacket;
 import io.netty5.channel.Channel;
@@ -31,5 +32,6 @@ public class NetClientHandler extends NetworkComponentHandler {
     @Override
     public void closeChannel(NetChannel netChannel) {
         this.client.channel(null);
+        this.client.state(NetworkComponentState.CONNECTION_CLOSED);
     }
 }

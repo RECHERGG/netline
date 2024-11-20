@@ -1,6 +1,6 @@
 ## Dependency
 
-> [important]
+> [!important]
 > You need to add the following repository to your project to use the snapshot version.
 > https://s01.oss.sonatype.org/content/repositories/snapshots/
 

@@ -102,7 +102,7 @@ public final class NetServer extends AbstractNetCompImpl<NetServerConfig> {
     @Contract("_, _ -> new")
     @Override
     public @NotNull NetChannel generateChannel(Channel channel, @Nullable String id) {
-        return new NetClientChannel(id, channel);
+        return new NetClientChannel(this, id, channel);
     }
 
     public void broadcast(Packet packet) {

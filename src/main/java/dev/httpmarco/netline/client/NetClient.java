@@ -113,7 +113,7 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
 
     @Override
     public <T extends Packet> @NotNull Request<T> request(String id, Class<T> packetClazz) {
-        return new Request<>(this, id, packetClazz);
+        return new Request<>(this, this, id, packetClazz);
     }
 
     @Override

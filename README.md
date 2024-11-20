@@ -1,6 +1,24 @@
 > We have fixed this bug in our development branch.
 > You can view the commit here: 
 
+## Dependency
+
+### 1.1 Maven
+```xml
+
+
+```
+
+### 1.2 Gradle
+```gradle
+
+```
+
+### 1.3 Gradle Kotlin DSL
+```kotlin
+
+```
+
 ## 1. Generell
 
 ### 1.1 Create a new comp component
@@ -104,5 +122,4 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 }
 ```
 
-- [ ] Implement custom timeout property
 - [ ] Node implementation

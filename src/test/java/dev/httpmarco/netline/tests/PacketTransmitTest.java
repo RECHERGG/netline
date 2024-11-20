@@ -64,7 +64,7 @@ public class PacketTransmitTest {
 
     @Test
     @Order(4)
-    @DisplayName("2.4 Server send a packet to a uniqueId client")
+    @DisplayName("2.4 Server send a packet to a uniqueId client (name detection)")
     public void testRedirectChannelTest() {
         var result = new AtomicBoolean(false);
 
@@ -77,7 +77,7 @@ public class PacketTransmitTest {
 
     @Test
     @Order(5)
-    @DisplayName("2.5 Server send a packet to a uniqueId client")
+    @DisplayName("2.5 Server send a packet to a uniqueId client (Predicate detection)")
     public void testPredicateRedirectChannelTest() {
         var result = new AtomicBoolean(false);
 

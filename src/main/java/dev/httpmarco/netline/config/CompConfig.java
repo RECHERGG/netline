@@ -14,5 +14,7 @@ public abstract class CompConfig implements Config{
     private String hostname;
     private int port;
     private boolean tryTcpFastOpen;
+    // Wait for response timeout
+    private int timeoutDelayInSeconds;
 
 }

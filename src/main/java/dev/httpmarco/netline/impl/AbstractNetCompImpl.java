@@ -2,6 +2,7 @@ package dev.httpmarco.netline.impl;
 
 import dev.httpmarco.netline.NetChannel;
 import dev.httpmarco.netline.NetComp;
+import dev.httpmarco.netline.config.CompConfig;
 import dev.httpmarco.netline.config.Config;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.*;
@@ -11,6 +12,7 @@ import io.netty5.channel.Channel;
 import io.netty5.channel.EventLoopGroup;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 @Log4j2
 @Accessors(fluent = true)
-public abstract class AbstractNetCompImpl<C extends Config> implements NetComp<C> {
+public abstract class AbstractNetCompImpl<C extends CompConfig> implements NetComp<C> {
 
     private final Map<Class<? extends Tracking>, List<BiConsumer<NetChannel, ? extends Tracking>>> trackers = new HashMap<>();
     @Getter
@@ -104,4 +107,10 @@ public abstract class AbstractNetCompImpl<C extends Config> implements NetComp<C
     public abstract NetChannel findChannel(Channel channel);
 
     public abstract NetChannel generateChannel(Channel channel, @Nullable String id);
+
+    @Override
+    @SneakyThrows
+    public void closeSync() {
+        this.close().get(config().timeoutDelayInSeconds(), TimeUnit.SECONDS);
+    }
 }

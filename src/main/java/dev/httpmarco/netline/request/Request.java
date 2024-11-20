@@ -1,6 +1,7 @@
 package dev.httpmarco.netline.request;
 
 import dev.httpmarco.netline.NetChannel;
+import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.packet.Packet;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public final class Request<T extends Packet> {
 
+    private final NetComp<?> comp;
     private final NetChannel channel;
     private final String requestId;
     private final Map<String, String> properties = new HashMap<>();
@@ -28,7 +30,7 @@ public final class Request<T extends Packet> {
 
     @SneakyThrows
     public T sync() {
-       return this.async().get(5, TimeUnit.SECONDS);
+       return this.async().get(this.comp.config().timeoutDelayInSeconds(), TimeUnit.SECONDS);
     }
 
     @Contract(pure = true)

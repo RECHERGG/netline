@@ -1,6 +1,6 @@
 [versions]
 
-nexusPublish = "2.0.0"
+nexus-publish = "2.0.0"
 annotations = "26.0.1"
 lombok = "1.18.34"
 netty5 = "5.0.0.Alpha5"
@@ -27,4 +27,4 @@ testing = ["junit", "junitEngine", "log4j2-simple", "awaitility"]
 utils = ["lombok", "annotations", "log4j2"]
 
 [plugins]
-nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublish" }
+nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus-publish" }

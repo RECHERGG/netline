@@ -1,2 +1,2 @@
-rootProject.name = "netline2"
+rootProject.name = "netline"
 

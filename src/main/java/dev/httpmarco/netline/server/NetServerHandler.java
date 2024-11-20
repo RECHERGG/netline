@@ -2,8 +2,11 @@ package dev.httpmarco.netline.server;
 
 import dev.httpmarco.netline.NetChannel;
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.request.RequestPacket;
 import dev.httpmarco.netline.tracking.BlacklistTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
+import io.netty5.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,5 +45,18 @@ public final class NetServerHandler extends NetCompHandler {
             log.info("Channel {} is in the blacklist!", hostname);
             return;
         }
+    }
+
+    @Override
+    protected void messageReceived(@NotNull ChannelHandlerContext ctx, Packet packet) {
+        if((packet instanceof RequestPacket requestPacket && requestPacket.value().equals("channel_identification")) && netServer.hasSecurityPolicy()) {
+            NetChannel securityTempChannel = netServer.generateChannel(ctx.channel(), requestPacket.properties().get("id"));
+            if(!netServer.securityHandler().authenticate(securityTempChannel)) {
+                netServer.securityHandler().detectUnauthorizedAccess(securityTempChannel);
+                securityTempChannel.close();
+                return;
+            }
+        }
+        super.messageReceived(ctx, packet);
     }
 }

@@ -7,6 +7,7 @@ import dev.httpmarco.netline.impl.AbstractNetCompImpl;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.packet.common.ChannelIdentifyPacket;
 import dev.httpmarco.netline.request.ResponderRegisterPacket;
+import dev.httpmarco.netline.security.SecurityHandler;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.Channel;
@@ -28,9 +29,14 @@ public final class NetServer extends AbstractNetCompImpl<NetServerConfig> {
 
     private final EventLoopGroup workerGroup = NetworkUtils.createEventLoopGroup(0);
     @Getter
+    @NotNull
     private final List<NetClientChannel> clients = new CopyOnWriteArrayList<>();
     @Getter
+    @NotNull
     private NetServerState state = NetServerState.INITIALIZE;
+    @Getter
+    @Nullable
+    private SecurityHandler securityHandler;
 
     public NetServer() {
         super(1, new NetServerConfig());
@@ -104,4 +110,11 @@ public final class NetServer extends AbstractNetCompImpl<NetServerConfig> {
         this.clients.stream().filter(predicate).forEach(channel -> channel.send(packet));
     }
 
+    public void withSecurityPolicy(SecurityHandler securityHandler) {
+        this.securityHandler = securityHandler;
+    }
+
+    public boolean hasSecurityPolicy() {
+        return this.securityHandler != null;
+    }
 }

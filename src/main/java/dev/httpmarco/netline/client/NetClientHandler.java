@@ -18,15 +18,15 @@ public final class NetClientHandler extends NetCompHandler {
 
     @Override
     public void closeChannel(NetChannel netChannel) {
-
-        if(netClient.bindProcess() != null) {
-            log.error("Deny the bind process, because the channel close before the bind process complete -> whitelist");
-            // deny the bind process, because the channel close before the bind process complete -> whitelist
-            netClient.bindProcess().complete(null);
-        }
-
         this.netClient.channel(null);
-        this.netClient.state(NetClientState.CLOSED);
+        if(netClient.bindProcess() != null) {
+            log.error("Deny the bind process, because the channel close before the bind process complete -> whitelist or security policy");
+            // deny the bind process, because the channel close before the bind process complete -> whitelist
+            this.netClient.state(NetClientState.FAILED);
+            netClient.bindProcess().complete(null);
+        } else {
+            this.netClient.state(NetClientState.CLOSED);
+        }
     }
 
     @Override

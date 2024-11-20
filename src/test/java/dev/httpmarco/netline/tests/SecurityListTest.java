@@ -2,6 +2,7 @@ package dev.httpmarco.netline.tests;
 
 import dev.httpmarco.netline.Net;
 import dev.httpmarco.netline.client.NetClientState;
+import dev.httpmarco.netline.content.TestSecurityProvider;
 import dev.httpmarco.netline.server.NetServer;
 import dev.httpmarco.netline.tracking.BlacklistTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
@@ -73,6 +74,29 @@ public class SecurityListTest {
         // we reset the whitelist for the next test
         server.config(it -> it.blacklist().remove(blockedIp));
         assert result.get();
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3.3 Test custom security policy")
+    public void testSecurityPolicy() {
+        // register the security policy
+        server.withSecurityPolicy(new TestSecurityProvider());
+
+        var testClientA = Net.line().client();
+        testClientA.config(netClientConfig -> netClientConfig.id("testA"));
+
+        var testClientB = Net.line().client();
+        testClientB.config(netClientConfig -> netClientConfig.id("testB"));
+
+        testClientA.bootSync();
+        assert testClientA.state() == NetClientState.CONNECTED;
+        assert server.clients().size() == 1;
+        testClientA.closeSync();
+
+        testClientB.bootSync();
+        assert testClientB.state() == NetClientState.FAILED;
+        assert server.clients().isEmpty();
     }
 
     @AfterAll

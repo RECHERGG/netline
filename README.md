@@ -70,8 +70,32 @@ request.async().whenComplete((result, throwable) -> {
 
 ```
 
+### 3.2 Custom security adapter
+The security provider allow you, to manage your clients with a custom security policy. Block or allow clients, based on your custom logic. A simpler way are the blacklist and whitelist. 
+```java
+// set your custom security provider -> child of @SecurityProvider
+server.withSecurityPolicy(new YourCustomSecurityProvider());
+```
+Example of a simple security provider:
+```java
+public class YourCustomSecurityProvider implement SecurityProvider {
+
+    @Override
+    public void detectUnauthorizedAccess(NetChannel netChannel) {
+        // alert if a client tries to connect without permission
+        // Channel closed automatically after this method.
+        System.err.println("Unauthorized access detected");
+    }
+
+    @Override
+    public boolean authenticate(NetChannel netChannel) {
+        // check the id of the client. Here you can implement your custom logic.
+        return netChannel.id().equals("testA");
+    }
+}
+```
+
 - [ ] Implement custom timeout property
 - [ ] Implement fast open on server and client -> configurable
 - [ ] Tracking for client connect, client disconnect
-- [ ] Implement security adapter for allow/deny new channels
 - [ ] Node implementation

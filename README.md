@@ -1,7 +1,9 @@
 > We have fixed this bug in our development branch.
 > You can view the commit here: 
 
-## 1.1 Create a new comp component
+## 1. Generell
+
+### 1.1 Create a new comp component
 Below is an example of a simple server component. The API is similar for a client or, in the future, a node.
 ```java
 Net.line()
@@ -22,7 +24,7 @@ Net.line()
     });
 ```
 
-## 1.2 Request and Response
+### 1.2 Request and Response
 With Netline, you can easily send a request packet to a component (comp) and receive a response. This can be used either asynchronously or synchronously.
 ```java
 // For every request, you need a responder to handle the request and send back a response. 
@@ -49,17 +51,25 @@ request.async().whenComplete((result, throwable) -> {
 
 ```
 
-2.1 Custom client comp methods
+## 2. Custom comp 
+
+### 2.1 Custom client comp methods
 ```java
 
 ```
 
-2.2 Custom server comp methods
+### 2.2 Custom server comp methods
 ```java
 
 ```
 
-- [ ] Fix blacklist and whitelist block -> timeout
+## 3. Security
+
+### 3.1 Blacklist and Whitelist
+```java
+
+```
+
 - [ ] Implement custom timeout property
 - [ ] Implement fast open on server and client -> configurable
 - [ ] Tracking for client connect, client disconnect

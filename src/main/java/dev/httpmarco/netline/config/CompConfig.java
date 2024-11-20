@@ -13,5 +13,6 @@ public abstract class CompConfig implements Config{
 
     private String hostname;
     private int port;
+    private boolean tryTcpFastOpen;
 
 }

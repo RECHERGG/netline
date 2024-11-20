@@ -97,6 +97,7 @@ public class SecurityListTest {
         testClientB.bootSync();
         assert testClientB.state() == NetClientState.FAILED;
         assert server.clients().isEmpty();
+        testClientB.closeSync();
     }
 
     @AfterAll

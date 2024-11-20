@@ -15,6 +15,6 @@ public final class NetClientConfig extends CompConfig {
     private String id = UUID.randomUUID().toString();
 
     public NetClientConfig() {
-        super("0.0.0.0", 9091);
+        super("0.0.0.0", 9091, true);
     }
 }

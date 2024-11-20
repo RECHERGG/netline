@@ -96,6 +96,6 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 ```
 
 - [ ] Implement custom timeout property
-- [ ] Implement fast open on server and client -> configurable
 - [ ] Tracking for client connect, client disconnect
+
 - [ ] Node implementation

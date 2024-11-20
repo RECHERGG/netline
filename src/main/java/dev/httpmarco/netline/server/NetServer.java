@@ -13,6 +13,7 @@ import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.Channel;
 import io.netty5.channel.ChannelOption;
 import io.netty5.channel.EventLoopGroup;
+import io.netty5.channel.epoll.Epoll;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
@@ -55,7 +56,11 @@ public final class NetServer extends AbstractNetCompImpl<NetServerConfig> {
                 .childOption(ChannelOption.IP_TOS, 24)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-        // todo fast open
+
+        if (config().tryTcpFastOpen() && Epoll.isTcpFastOpenServerSideAvailable()) {
+            bootstrap.childOption(ChannelOption.TCP_FASTOPEN_CONNECT, true);
+        }
+
         bootstrap.bind(config().hostname(), config().port()).addListener(it -> {
             if(it.isSuccess()) {
                 this.state = NetServerState.BOOTED;

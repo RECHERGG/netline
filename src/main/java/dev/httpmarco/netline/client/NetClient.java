@@ -131,7 +131,7 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
                 .option(ChannelOption.IP_TOS, 24)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
 
-        if (Epoll.isTcpFastOpenClientSideAvailable()) {
+        if (config().tryTcpFastOpen() && Epoll.isTcpFastOpenClientSideAvailable()) {
             bootstrap.option(ChannelOption.TCP_FASTOPEN_CONNECT, true);
         }
     }

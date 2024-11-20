@@ -22,7 +22,7 @@ Net.line()
     });
 ```
 
-## 2.2 Request and Response
+## 1.2 Request and Response
 With Netline, you can easily send a request packet to a component (comp) and receive a response. This can be used either asynchronously or synchronously.
 ```java
 // For every request, you need a responder to handle the request and send back a response. 
@@ -48,3 +48,20 @@ request.async().whenComplete((result, throwable) -> {
 });
 
 ```
+
+2.1 Custom client comp methods
+```java
+
+```
+
+2.2 Custom server comp methods
+```java
+
+```
+
+- [ ] Fix blacklist and whitelist block -> timeout
+- [ ] Implement custom timeout property
+- [ ] Implement fast open on server and client -> configurable
+- [ ] Tracking for client connect, client disconnect
+- [ ] Implement security adapter for allow/deny new channels
+- [ ] Node implementation

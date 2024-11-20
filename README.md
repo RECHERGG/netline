@@ -9,7 +9,7 @@
 > You need to add the following repository to your project to use the snapshot version.
 > https://s01.oss.sonatype.org/content/repositories/snapshots/
 
-### 1.1 Maven
+### 0.1 Maven
 ```xml
 <repository>
     <id>netline-central-snapshot</id>
@@ -23,7 +23,7 @@
 </dependency>
 ```
 
-### 1.2 Gradle
+### 0.2 Gradle
 ```groovy
 maven {
     url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
@@ -32,7 +32,7 @@ maven {
 compile "dev.httpmarco:netline:1.0.0-SNAPSHOT"
 ```
 
-### 1.3 Gradle Kotlin DSL
+### 0.3 Gradle Kotlin DSL
 ```kotlin
 maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
@@ -114,7 +114,14 @@ server.clients();
 
 ### 3.1 Blacklist and Whitelist
 ```java
-
+var server = Net.line().server();
+server.config(it -> {
+    // blacklist a specific address
+    it.blacklist().add("xx.xx.xx.xx");
+    // whitelist a specific address 
+    it.whitelist().add("xx.xx.xx.xx");
+});
+server.bootSync();
 ```
 
 ### 3.2 Custom security adapter

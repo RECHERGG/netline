@@ -4,10 +4,7 @@
 </p>
 
 ## Dependency
-
-> [!important]
-> You need to add the following repository to your project to use the snapshot version.
-> https://s01.oss.sonatype.org/content/repositories/snapshots/
+The libs are hosted on the Sonatype Nexus Repository. You can add the following dependency to your project.
 
 ### 0.1 Maven
 ```xml
@@ -93,6 +90,7 @@ request.async().whenComplete((result, throwable) -> {
 
 ### 2.1 Custom client comp methods
 ```java
+var client = Net.line().client();
 
 ```
 
@@ -149,4 +147,13 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 }
 ```
 
+4.0 Tracking table
+
+| Tracking                         | Description                                                                 |
+|----------------------------------|-----------------------------------------------------------------------------|
+| ClientConnectedTracking.class    | If the client connects to the server, this tracking will be triggered.      |
+| ClientDisconnectedTracking.class | If the client disconnects from the server, this tracking will be triggered. |
+
+
+5.0 Future features :)
 - [ ] Node implementation

@@ -1,22 +1,37 @@
-> We have fixed this bug in our development branch.
-> You can view the commit here: 
-
 ## Dependency
+
+> [important]
+> You need to add the following repository to your project to use the snapshot version.
+> https://s01.oss.sonatype.org/content/repositories/snapshots/
 
 ### 1.1 Maven
 ```xml
+<repository>
+    <id>netline-central-snapshot</id>
+    <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+</repository>
 
-
+<dependency>
+    <groupId>dev.httpmarco</groupId>
+    <artifactId>netline</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
 ```
 
 ### 1.2 Gradle
-```gradle
+```groovy
+maven {
+    url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+}
 
+compile "dev.httpmarco:netline:1.0.0-SNAPSHOT"
 ```
 
 ### 1.3 Gradle Kotlin DSL
 ```kotlin
+maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
+implementation("dev.httpmarco:netline:1.0.0-SNAPSHOT")
 ```
 
 ## 1. Generell

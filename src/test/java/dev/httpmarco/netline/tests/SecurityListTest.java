@@ -3,6 +3,7 @@ package dev.httpmarco.netline.tests;
 import dev.httpmarco.netline.Net;
 import dev.httpmarco.netline.client.NetClientState;
 import dev.httpmarco.netline.server.NetServer;
+import dev.httpmarco.netline.tracking.BlacklistTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
@@ -57,7 +58,7 @@ public class SecurityListTest {
 
         server.config(it -> it.blacklist().add(blockedIp));
 
-        server.track(WhitelistTracking.class, (channel, it)  -> result.set(true));
+        server.track(BlacklistTracking.class, (channel, it)  -> result.set(true));
 
         var testClient = Net.line().client();
         testClient.bootSync();

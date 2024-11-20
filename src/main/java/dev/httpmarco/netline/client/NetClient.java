@@ -32,7 +32,11 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
 
     private Bootstrap bootstrap;
     @Setter(AccessLevel.PACKAGE)
+    @Nullable
     private Channel channel;
+    @Nullable
+    @Getter(AccessLevel.PACKAGE)
+    private CompletableFuture<Void> bindProcess;
 
     @Getter
     @Setter(AccessLevel.PACKAGE)
@@ -45,7 +49,9 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
 
     @Override
     public @NotNull CompletableFuture<Void> boot() {
-        var future = new CompletableFuture<Void>();
+        var bindProcess = new CompletableFuture<Void>();
+        this.bindProcess = bindProcess;
+
         this.state = NetClientState.CONNECTING;
 
         if(bossGroup().isShuttingDown() || bossGroup().isShutdown()) {
@@ -60,14 +66,15 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
                 // we must wait for the channel to be identified, so we can complete the boot future
                 this.request("channel_identification", ChannelIdentifyPacket.class).withProp("id", config().id()).async().whenComplete((packet, throwable) -> {
                     this.state = NetClientState.CONNECTED;
-                    future.complete(null);
+                    bindProcess.complete(null);
+                    this.bindProcess = null;
                 });
                 return;
             }
-            future.completeExceptionally(it.cause());
+            bindProcess.completeExceptionally(it.cause());
+            this.bindProcess = null;
         });
-
-        return future;
+        return bindProcess;
     }
 
     @Override

@@ -1,3 +1,8 @@
+<p align="center">
+     <h3 align="center">NetLine</h3>
+     <p align="center">A simple and lightweight network library for Java.</p>
+</p>
+
 ## Dependency
 
 > [!important]

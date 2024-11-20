@@ -6,6 +6,8 @@ import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.RequestPacket;
 import dev.httpmarco.netline.tracking.BlacklistTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
+import dev.httpmarco.netline.tracking.server.ClientConnectedTracking;
+import dev.httpmarco.netline.tracking.server.ClientDisconnectedTracking;
 import io.netty5.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +24,7 @@ public final class NetServerHandler extends NetCompHandler {
 
     @Override
     public void closeChannel(NetChannel netChannel) {
+        this.netServer.callTracking(netChannel, new ClientDisconnectedTracking(netChannel));
         this.netServer.clients().remove(netChannel);
     }
 

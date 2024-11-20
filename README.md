@@ -60,7 +60,16 @@ request.async().whenComplete((result, throwable) -> {
 
 ### 2.2 Custom server comp methods
 ```java
-
+var server = Net.line().server();
+server.bootSync();
+// alert a packet to all connected clients
+server.broadcast(new YourPacketType());
+// alert a packet to a specific client
+server.send("clientA", new YourPacketType());
+// alert a packet to all clients with an id starting with "stats"
+server.send(it -> it.id().startWith("stats"), new YourPacketType());
+// get all connected clients
+server.clients();
 ```
 
 ## 3. Security
@@ -96,6 +105,4 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 ```
 
 - [ ] Implement custom timeout property
-- [ ] Tracking for client connect, client disconnect
-
 - [ ] Node implementation

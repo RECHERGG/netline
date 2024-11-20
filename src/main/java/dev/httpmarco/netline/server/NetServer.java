@@ -8,6 +8,7 @@ import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.packet.common.ChannelIdentifyPacket;
 import dev.httpmarco.netline.request.ResponderRegisterPacket;
 import dev.httpmarco.netline.security.SecurityHandler;
+import dev.httpmarco.netline.tracking.server.ClientConnectedTracking;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.ServerBootstrap;
 import io.netty5.channel.Channel;
@@ -73,6 +74,7 @@ public final class NetServer extends AbstractNetCompImpl<NetServerConfig> {
 
         responderOf("channel_identification", (channel, properties) -> {
             this.clients.add((NetClientChannel) channel);
+            callTracking(channel, new ClientConnectedTracking(channel));
             return new ChannelIdentifyPacket(channel.id());
         });
 

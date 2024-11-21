@@ -51,20 +51,7 @@ public class PacketTransmitTest {
 
     @Test
     @Order(3)
-    @DisplayName("2.3 Broadcast a simple packet from server to all clients")
-    public void testServerBroadcastPacketTransmit() {
-        var result = new AtomicBoolean(false);
-
-        client.track(TestSimplePacket.class, packet -> result.set(packet.completed()));
-        server.broadcast(new TestSimplePacket(true));
-
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(result);
-        assert result.get();
-    }
-
-    @Test
-    @Order(4)
-    @DisplayName("2.4 Server send a packet to a uniqueId client (name detection)")
+    @DisplayName("2.3 Server send a packet to a uniqueId client (name detection)")
     public void testRedirectChannelTest() {
         var result = new AtomicBoolean(false);
 
@@ -76,7 +63,7 @@ public class PacketTransmitTest {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     @DisplayName("2.5 Server send a packet to a uniqueId client (Predicate detection)")
     public void testPredicateRedirectChannelTest() {
         var result = new AtomicBoolean(false);

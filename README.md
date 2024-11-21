@@ -181,7 +181,7 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 }
 ```
 
-4.0 Tracking table
+## 4.0 Tracking table
 
 | Tracking                         | Description                                                                 |
 |----------------------------------|-----------------------------------------------------------------------------|
@@ -189,7 +189,7 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 | ClientDisconnectedTracking.class | If the client disconnects from the server, this tracking will be triggered. |
 
 
-5.0 Future features :)
+## 5.0 Future features :)
 - [ ] Node implementation
 - [ ] test for bad response answer
 - [ ] Add a better packet base logic

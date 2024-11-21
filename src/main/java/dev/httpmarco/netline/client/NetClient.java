@@ -1,14 +1,13 @@
 package dev.httpmarco.netline.client;
 
 import dev.httpmarco.netline.NetChannel;
-import dev.httpmarco.netline.NetComp;
+import dev.httpmarco.netline.broadcast.Broadcast;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.impl.AbstractNetCompImpl;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.packet.common.ChannelIdentifyPacket;
 import dev.httpmarco.netline.request.Request;
 import dev.httpmarco.netline.request.ResponderRegisterPacket;
-import dev.httpmarco.netline.server.NetServerState;
 import dev.httpmarco.netline.utils.NetworkUtils;
 import io.netty5.bootstrap.Bootstrap;
 import io.netty5.channel.Channel;
@@ -19,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Map;
@@ -102,6 +102,10 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
         this.channel.writeAndFlush(packet);
     }
 
+    public void send(String clientId, Packet packet) {
+        // todo
+    }
+
     @Override
     public void responderOf(String id, BiFunction<NetChannel, Map<String, String>, Packet> responder) {
         super.responderOf(id, responder);
@@ -145,5 +149,10 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
     public NetChannel generateChannel(Channel channel, @Nullable String id) {
         this.channel = channel;
         return this;
+    }
+
+    @Contract(" -> new")
+    public @NotNull Broadcast generateBroadcast() {
+        return new Broadcast(new NetChannel[]{this});
     }
 }

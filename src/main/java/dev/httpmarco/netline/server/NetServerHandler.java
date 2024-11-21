@@ -2,7 +2,9 @@ package dev.httpmarco.netline.server;
 
 import dev.httpmarco.netline.NetChannel;
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.channel.NetClientChannel;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.packet.common.BroadcastPacket;
 import dev.httpmarco.netline.request.RequestPacket;
 import dev.httpmarco.netline.tracking.BlacklistTracking;
 import dev.httpmarco.netline.tracking.WhitelistTracking;
@@ -48,6 +50,12 @@ public final class NetServerHandler extends NetCompHandler {
             log.info("Channel {} is in the blacklist!", hostname);
             return;
         }
+    }
+
+    @Override
+    public void broadcastDefinition(NetChannel incoming, BroadcastPacket packet) {
+        //todo
+        this.netServer.clients().stream().filter(NetClientChannel::ready).filter(it -> !it.id().equals(incoming.id())).forEach(channel -> channel.send(packet));
     }
 
     @Override

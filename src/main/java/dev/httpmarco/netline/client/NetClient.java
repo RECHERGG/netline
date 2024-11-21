@@ -153,6 +153,6 @@ public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implem
 
     @Contract(" -> new")
     public @NotNull Broadcast generateBroadcast() {
-        return new Broadcast(new NetChannel[]{this});
+        return new Broadcast(this, this, new NetChannel[]{this});
     }
 }

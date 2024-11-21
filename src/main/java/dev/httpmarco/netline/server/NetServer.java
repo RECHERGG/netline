@@ -105,10 +105,6 @@ public final class NetServer extends AbstractNetCompImpl<NetServerConfig> {
         return new NetClientChannel(this, id, channel);
     }
 
-    public void broadcast(Packet packet) {
-        this.clients.stream().filter(NetClientChannel::ready).forEach(channel -> channel.send(packet));
-    }
-
     public void send(String id, Packet packet) {
         this.clients.stream().filter(it -> it.id().equals(id)).findFirst().ifPresent(channel -> channel.send(packet));
     }

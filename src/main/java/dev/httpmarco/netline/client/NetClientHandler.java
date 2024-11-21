@@ -2,6 +2,7 @@ package dev.httpmarco.netline.client;
 
 import dev.httpmarco.netline.NetChannel;
 import dev.httpmarco.netline.NetCompHandler;
+import dev.httpmarco.netline.packet.common.BroadcastPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,5 +33,10 @@ public final class NetClientHandler extends NetCompHandler {
     @Override
     public void handshakeChannel(NetChannel netChannel) {
 
+    }
+
+    @Override
+    public void broadcastDefinition(NetChannel incoming, BroadcastPacket packet) {
+        netClient.callTracking(incoming, packet.packet());
     }
 }

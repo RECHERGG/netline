@@ -3,6 +3,7 @@ package dev.httpmarco.netline;
 import dev.httpmarco.netline.config.Config;
 import dev.httpmarco.netline.impl.AbstractNetCompImpl;
 import dev.httpmarco.netline.packet.Packet;
+import dev.httpmarco.netline.packet.common.BroadcastPacket;
 import dev.httpmarco.netline.request.RequestPacket;
 import io.netty5.channel.ChannelHandlerContext;
 import io.netty5.channel.SimpleChannelInboundHandler;
@@ -30,6 +31,13 @@ public abstract class NetCompHandler extends SimpleChannelInboundHandler<Packet>
             }
             return;
         }
+
+        if(packet instanceof BroadcastPacket broadcastPacket) {
+            // broadcast packets are only handling in this method. Tracking is not supported
+            broadcastDefinition(channel, broadcastPacket);
+            return;
+        }
+
         netComp.callTracking(netComp.findChannel(ctx.channel()), packet);
     }
 
@@ -54,4 +62,6 @@ public abstract class NetCompHandler extends SimpleChannelInboundHandler<Packet>
     public abstract void closeChannel(NetChannel netChannel);
 
     public abstract void handshakeChannel(NetChannel netChannel);
+
+    public abstract void broadcastDefinition(NetChannel incoming, BroadcastPacket packet);
 }

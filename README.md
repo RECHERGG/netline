@@ -83,7 +83,41 @@ request.async().whenComplete((result, throwable) -> {
     // The request was successfully answered.
     ResponsePacketType asyncResponse = result;
 });
+```
+### 1.3 Broadcast from client
+```java
+// send a packet to all clients and servers
+client.generateBroadCast().broadcast(new YourBroadcastPacket());
 
+// send a packet only to selected clients
+client.generateBroadcast()
+    .onlyFor("clientA", "clientB")
+    .broadcast(new YourBroadcastPacket());
+
+// send a packet to all, but skip a specific client(s). Here 'clientA'
+client.generateBroadcast()
+    .ignore("clientA")
+    .broadcast(new YourBroadcastPacket());
+
+// send a packet to the first 2 endpoints. Left clients are be ignored!
+client.generateBroadcast()
+    .limt(2)
+    .broadcast(new YourBroadcastPacket());
+
+// All this options can be merged together in one broadcast option.
+// Important: All options are optional! 
+client.generateBroadcast()
+    .limit(10) // maximum client amount 
+    .ignore("trash-service") // ignore the trash services
+    .onlyFor("rich-service", "babo-service") // we select the best services
+    .deselect(Receiver.SERVER) // send only to all clients
+    .broadcast(new YourBroadcastPacket()); // finally sending the broadcast
+```
+
+### 1.4 Redirect packets
+You can send a packet from a client connected to the server, routing it through the server to a specific client. In this example, the packet is sent to client A.
+```java
+client.send("clientA", new YourRedirectPacket());
 ```
 
 ## 2. Custom comp 

@@ -87,7 +87,7 @@ request.async().whenComplete((result, throwable) -> {
 ### 1.3 Broadcast from client
 ```java
 // send a packet to all clients and servers
-client.generateBroadCast().send(new YourBroadcastPacket());
+client.generateBroadcast().send(new YourBroadcastPacket());
 
 // send a packet only to selected clients
 client.generateBroadcast()
@@ -97,6 +97,11 @@ client.generateBroadcast()
 // send a packet to all, but skip a specific client(s). Here 'clientA'
 client.generateBroadcast()
     .exclude("clientA")
+    .send(new YourBroadcastPacket());
+
+// send a packet to all clients and servers, but also to his own client
+client.generateBroadcast()
+    .generateBroadcast()
     .send(new YourBroadcastPacket());
 
 // send a packet to the first 2 endpoints. Left clients are be ignored!

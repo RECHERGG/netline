@@ -87,31 +87,31 @@ request.async().whenComplete((result, throwable) -> {
 ### 1.3 Broadcast from client
 ```java
 // send a packet to all clients and servers
-client.generateBroadCast().broadcast(new YourBroadcastPacket());
+client.generateBroadCast().send(new YourBroadcastPacket());
 
 // send a packet only to selected clients
 client.generateBroadcast()
-    .onlyFor("clientA", "clientB")
-    .broadcast(new YourBroadcastPacket());
+    .to("clientA", "clientB")
+    .send(new YourBroadcastPacket());
 
 // send a packet to all, but skip a specific client(s). Here 'clientA'
 client.generateBroadcast()
-    .ignore("clientA")
-    .broadcast(new YourBroadcastPacket());
+    .exclude("clientA")
+    .send(new YourBroadcastPacket());
 
 // send a packet to the first 2 endpoints. Left clients are be ignored!
 client.generateBroadcast()
     .limt(2)
-    .broadcast(new YourBroadcastPacket());
+    .send(new YourBroadcastPacket());
 
 // All this options can be merged together in one broadcast option.
 // Important: All options are optional! 
 client.generateBroadcast()
     .limit(10) // maximum client amount 
-    .ignore("trash-service") // ignore the trash services
-    .onlyFor("rich-service", "babo-service") // we select the best services
+    .exclude("trash-service") // ignore the trash services
+    .to("rich-service", "babo-service") // we select the best services
     .deselect(Receiver.SERVER) // send only to all clients
-    .broadcast(new YourBroadcastPacket()); // finally sending the broadcast
+    .send(new YourBroadcastPacket()); // finally sending the broadcast
 ```
 
 ### 1.4 Redirect packets
@@ -191,3 +191,4 @@ public class YourCustomSecurityProvider implement SecurityProvider {
 
 5.0 Future features :)
 - [ ] Node implementation
+- [ ] test for bad response answer

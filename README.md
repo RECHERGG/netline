@@ -169,7 +169,7 @@ server.withSecurityPolicy(new YourCustomSecurityProvider());
 ```
 Example of a simple security provider:
 ```java
-public class YourCustomSecurityProvider implement SecurityProvider {
+public class YourCustomSecurityProvider implements SecurityProvider {
 
     @Override
     public void detectUnauthorizedAccess(NetChannel netChannel) {

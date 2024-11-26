@@ -31,6 +31,7 @@ public abstract class AbstractNetServer<C extends CompConfig> extends AbstractNe
                 .group(bossGroup(), workerGroup)
                 .childHandler(new NetChannelInitializer(handler()))
                 .channelFactory(NetworkUtils.generateChannelFactory())
+                .option(ChannelOption.SO_REUSEADDR, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.IP_TOS, 24)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);

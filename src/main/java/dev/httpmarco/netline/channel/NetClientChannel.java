@@ -1,7 +1,6 @@
 package dev.httpmarco.netline.channel;
 
 import dev.httpmarco.netline.NetChannel;
-import dev.httpmarco.netline.NetComp;
 import dev.httpmarco.netline.packet.Packet;
 import dev.httpmarco.netline.request.Request;
 import dev.httpmarco.netline.server.NetServer;

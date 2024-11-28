@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 
 @Log4j2
 @Accessors(fluent = true)
-public final class NetClient extends AbstractNetCompImpl<NetClientConfig> implements NetChannel {
+public class NetClient extends AbstractNetCompImpl<NetClientConfig> implements NetChannel {
 
     private Bootstrap bootstrap;
     @Setter(AccessLevel.PACKAGE)

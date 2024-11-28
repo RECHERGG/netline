@@ -60,8 +60,9 @@ public final class NetServer extends AbstractNetServer<NetServerConfig> {
     public void send(Predicate<NetClientChannel> predicate, Packet packet) {
         this.clients.stream().filter(predicate).forEach(channel -> channel.send(packet));
     }
+
     @Override
-    public CompletableFuture<Void> onClose() {
+    public @NotNull CompletableFuture<Void> onClose() {
         var future = CompletableFuture.allOf(this.clients.stream().map(NetClientChannel::close).toArray(CompletableFuture[]::new));
         this.state = NetServerState.CLOSED;
         return future;
@@ -73,12 +74,14 @@ public final class NetServer extends AbstractNetServer<NetServerConfig> {
     }
 
     @Override
-    public void onBindSuccess() {
+    public @NotNull CompletableFuture<Void> onBindSuccess() {
         this.state = NetServerState.BOOTED;
+        return CompletableFuture.completedFuture(null);
     }
 
+    @Contract(" -> new")
     @Override
-    public NetCompHandler handler() {
+    public @NotNull NetCompHandler handler() {
         return new NetServerHandler(this);
     }
 

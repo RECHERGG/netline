@@ -1,28 +1,42 @@
 package dev.httpmarco.netline.tests;
 
+import dev.httpmarco.netline.Net;
+import dev.httpmarco.netline.node.NetNode;
+import dev.httpmarco.netline.node.NetNodeBinding;
 import dev.httpmarco.netline.node.NetNodeState;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("5 - Node cluster test")
-public class NodeTest {
+@DisplayName("6 - Node cluster test")
+public final class NodeTest {
 
-    /*
-    private static NetNode node;
+    private static NetNode nodeA;
+    private static NetNode nodeB;
 
     @BeforeAll
     public static void beforeHandling() {
-        node = new NetNode();
+        nodeA = Net.line().node();
+        nodeA.config(it -> it.bindings().add(new NetNodeBinding("nodeA", "localhost", 9093)));
+        nodeB = Net.line().node();
+        nodeB.config(it -> it.port(9093));
     }
 
     @Test
     @Order(1)
-    @DisplayName("5.1 Start first node")
+    @DisplayName("6.1 Start first node")
     public void testState() {
-        assert node.state() == NetNodeState.INITIALIZING;
-        node.bootSync();
-        assert node.state() == NetNodeState.READY;
+        assert nodeA.state() == NetNodeState.INITIALIZING;
+        nodeA.bootSync();
+        assert nodeA.state() == NetNodeState.READY;
     }
 
-     */
+    @Test
+    @Order(2)
+    @DisplayName("6.2 Start second node")
+    public void testSecondNode() {
+        assert nodeB.state() == NetNodeState.INITIALIZING;
+        nodeB.bootSync();
+        assert nodeB.state() == NetNodeState.READY;
+    }
+
 }

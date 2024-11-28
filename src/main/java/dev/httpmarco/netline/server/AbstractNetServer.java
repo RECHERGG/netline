@@ -1,6 +1,5 @@
 package dev.httpmarco.netline.server;
 
-import dev.httpmarco.netline.NetChannel;
 import dev.httpmarco.netline.NetCompHandler;
 import dev.httpmarco.netline.channel.NetChannelInitializer;
 import dev.httpmarco.netline.config.CompConfig;
@@ -22,7 +21,6 @@ public abstract class AbstractNetServer<C extends CompConfig> extends AbstractNe
         super(1, config);
     }
 
-
     @Override
     public CompletableFuture<Void> boot() {
         var future = new CompletableFuture<Void>();
@@ -42,8 +40,7 @@ public abstract class AbstractNetServer<C extends CompConfig> extends AbstractNe
 
         bootstrap.bind(config().hostname(), config().port()).addListener(it -> {
             if(it.isSuccess()) {
-                this.onBindSuccess();
-                future.complete(null);
+                this.onBindSuccess().whenComplete((unused, throwable) -> future.complete(null));
                 return;
             }
             this.onBindFail(it.cause());
@@ -64,7 +61,7 @@ public abstract class AbstractNetServer<C extends CompConfig> extends AbstractNe
 
     public abstract void onBindFail(Throwable throwable);
 
-    public abstract void onBindSuccess();
+    public abstract CompletableFuture<Void> onBindSuccess();
 
     public abstract NetCompHandler handler();
 }

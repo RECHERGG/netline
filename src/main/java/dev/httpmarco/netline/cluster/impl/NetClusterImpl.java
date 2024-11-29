@@ -27,6 +27,7 @@ public final class NetClusterImpl implements NetCluster {
 
     public NetClusterImpl() {
         this.localNode = new LocalNodeImpl();
+        this.nodes.add(this.localNode);
     }
 
     @Override
@@ -41,7 +42,7 @@ public final class NetClusterImpl implements NetCluster {
 
     @Override
     public @Nullable NetNode findNode(String nodeId) {
-        return null;
+        return this.nodes.stream().filter(it -> it.data().id().equals(nodeId)).findFirst().orElse(null);
     }
 
     @Contract(pure = true)

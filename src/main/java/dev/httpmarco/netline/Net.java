@@ -1,7 +1,8 @@
 package dev.httpmarco.netline;
 
 import dev.httpmarco.netline.client.NetClient;
-import dev.httpmarco.netline.node.NetNode;
+import dev.httpmarco.netline.cluster.NetCluster;
+import dev.httpmarco.netline.cluster.impl.DefaultNetCluster;
 import dev.httpmarco.netline.server.NetServer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ public final class Net {
     }
 
     @Contract(value = " -> new", pure = true)
-    public @NotNull NetNode node() {
-        return new NetNode();
+    public @NotNull NetCluster cluster() {
+        return new DefaultNetCluster();
     }
 }

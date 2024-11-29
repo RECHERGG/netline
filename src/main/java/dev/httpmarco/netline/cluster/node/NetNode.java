@@ -35,4 +35,10 @@ public interface NetNode {
      */
     void bootSync();
 
+    /**
+     * Return the channel use state
+     * @return true if channel, data and state are ready
+     */
+    boolean ready();
+
 }

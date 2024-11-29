@@ -1,14 +1,18 @@
 package dev.httpmarco.netline.tests;
 
+import dev.httpmarco.netline.Net;
+import dev.httpmarco.netline.cluster.NetCluster;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("6 - Node cluster test")
 public final class NodeTest {
 
+    private static NetCluster netClusterPartA;
+
     @BeforeAll
     public static void beforeHandling() {
-
+        netClusterPartA = Net.line().cluster();
     }
 
     @Test

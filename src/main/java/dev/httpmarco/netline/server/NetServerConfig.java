@@ -15,6 +15,6 @@ public final class NetServerConfig extends CompConfig {
     private final List<String> whitelist = new ArrayList<>();
 
     public NetServerConfig() {
-        super("0.0.0.0", 9091, true, 5);
+        super("0.0.0.0", 9091, true, 10);
     }
 }

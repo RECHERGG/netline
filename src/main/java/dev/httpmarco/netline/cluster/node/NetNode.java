@@ -1,5 +1,6 @@
 package dev.httpmarco.netline.cluster.node;
 
+import io.netty5.channel.Channel;
 import lombok.NonNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -46,5 +47,11 @@ public interface NetNode {
      * @return the data
      */
     NetNodeData data();
+
+    /**
+     * Get the channel of the node
+     * @return the channel
+     */
+    Channel channel();
 
 }

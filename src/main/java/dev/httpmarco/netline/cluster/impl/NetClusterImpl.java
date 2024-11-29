@@ -1,9 +1,8 @@
 package dev.httpmarco.netline.cluster.impl;
 
 import dev.httpmarco.netline.cluster.NetCluster;
-import dev.httpmarco.netline.cluster.node.LocalNetNode;
 import dev.httpmarco.netline.cluster.node.NetNode;
-import dev.httpmarco.netline.cluster.node.impl.LocalNodeImpl;
+import dev.httpmarco.netline.cluster.node.NetNodeData;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -21,12 +20,13 @@ import java.util.concurrent.TimeUnit;
 @Accessors(fluent = true)
 public final class NetClusterImpl implements NetCluster {
 
-    private final LocalNetNode localNode;
+    private final LocalNodeImpl localNode;
     private final List<NetNode> nodes = new LinkedList<>();
     private NetNode headNode;
 
     public NetClusterImpl() {
-        this.localNode = new LocalNodeImpl();
+        // todo find a config
+        this.localNode = new LocalNodeImpl(this, new NetNodeData("nodeA"));
         this.nodes.add(this.localNode);
     }
 
@@ -43,6 +43,16 @@ public final class NetClusterImpl implements NetCluster {
     @Override
     public @Nullable NetNode findNode(String nodeId) {
         return this.nodes.stream().filter(it -> it.data().id().equals(nodeId)).findFirst().orElse(null);
+    }
+
+    @Override
+    public void registerNode(NetNodeData data) {
+
+    }
+
+    @Override
+    public void unregisterNode(NetNodeData data) {
+
     }
 
     @Contract(pure = true)

@@ -1,8 +1,9 @@
 package dev.httpmarco.netline.cluster;
 
 import dev.httpmarco.netline.Closeable;
-import dev.httpmarco.netline.cluster.node.LocalNetNode;
+import dev.httpmarco.netline.cluster.impl.LocalNodeImpl;
 import dev.httpmarco.netline.cluster.node.NetNode;
+import dev.httpmarco.netline.cluster.node.NetNodeData;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ public interface NetCluster extends Closeable {
      * Get the self runtime local node
      * @return the local node
      */
-    @NonNull LocalNetNode localNode();
+    @NonNull LocalNodeImpl localNode();
 
     /**
      * Get all the nodes in the cluster, ignore the state
@@ -46,5 +47,17 @@ public interface NetCluster extends Closeable {
      * @return the selected Node
      */
     @Nullable NetNode findNode(String nodeId);
+
+    /**
+     * Register a new node to the cluster
+     * @param data represent the information
+     */
+    void registerNode(NetNodeData data);
+
+    /**
+     * Unregister a node from the cluster
+     * @param data represent the information
+     */
+    void unregisterNode(NetNodeData data);
 
 }

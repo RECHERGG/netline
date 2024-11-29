@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,6 +23,7 @@ public final class NetClusterImpl implements NetCluster {
 
     private final LocalNetNode localNode;
     private final List<NetNode> nodes = new LinkedList<>();
+    private NetNode headNode;
 
     public NetClusterImpl() {
         this.localNode = new LocalNodeImpl();
@@ -28,12 +31,7 @@ public final class NetClusterImpl implements NetCluster {
 
     @Override
     public void searchHeadNode() {
-
-    }
-
-    @Override
-    public @NonNull NetNode headNode() {
-        return null;
+        this.headNode = this.nodes.stream().filter(NetNode::ready).min(Comparator.comparingLong(it -> it.data().creationMillis())).orElseThrow();
     }
 
     @Override
@@ -46,8 +44,9 @@ public final class NetClusterImpl implements NetCluster {
         return null;
     }
 
+    @Contract(pure = true)
     @Override
-    public CompletableFuture<Void> close() {
+    public @Nullable CompletableFuture<Void> close() {
         return null;
     }
 

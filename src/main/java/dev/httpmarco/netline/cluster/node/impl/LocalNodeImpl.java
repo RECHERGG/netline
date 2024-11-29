@@ -4,7 +4,6 @@ import dev.httpmarco.netline.cluster.node.LocalNetNode;
 import dev.httpmarco.netline.cluster.node.NetNodeState;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 @Accessors(fluent = true)
 public class LocalNodeImpl implements LocalNetNode {
 
-    @Setter
     private NetNodeState state = NetNodeState.UNAVAILABLE;
 
     @Override
@@ -36,4 +34,10 @@ public class LocalNodeImpl implements LocalNetNode {
         // todo
         return this.state == NetNodeState.READY;
     }
+
+    @Override
+    public void state(@NonNull NetNodeState state) {
+        this.state = state;
+    }
 }
+

@@ -41,4 +41,10 @@ public interface NetNode {
      */
     boolean ready();
 
+    /**
+     * Get the data of the node
+     * @return the data
+     */
+    NetNodeData data();
+
 }
